@@ -19,13 +19,13 @@ This list will be expanded upon and updated as status for sub-projects change an
 ### <a href="2048/README.md">2048</a>
 - Status: 📒 Backlog
 
-### <a href="BinarySudoku/README.md">BinarySudoku</a>
+### <a href="BinarySudoku/README.md">Binary Sudoku</a>
 - Status: ✅ Complete | Further Optimisation Pending
 
 ### <a href="Mastermind/README.md">Mastermind</a>
 - Status: 🗒️ Researching
 
-### <a href="MineSweeper/README.md">MineSweeper</a>
+### <a href="MineSweeper/README.md">Mine Sweeper</a>
 - Status: 📒 Backlog
 
 ### <a href="Nonogram/README.md">Nonogram</a>
