@@ -22,6 +22,9 @@ This list will be expanded upon and updated as status for sub-projects change an
 ### <a href="BinarySudoku/README.md">Binary Sudoku</a>
 - Status: ✅ Complete | Further Optimisation Pending
 
+### <a href="Kuromasu/README.md">Kuromasu</a>
+- Status: 📒 Backlog
+
 ### <a href="Mastermind/README.md">Mastermind</a>
 - Status: 🗒️ Researching
 
