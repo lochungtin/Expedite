@@ -12,7 +12,9 @@ Project Expedite is my attempt to create solutions, algorithms, or solvers to cl
 
 ## Directory and Status
 
-The following list shows the puzzle games for this project and their respective status in solution development
+The following list shows the puzzle games for this project and their respective status in solution development.
+
+This list will be expanded upon and updated as status or sub-projects change and / or new puzzles are being added to the catalogue.
 
 ### <a href="2048/README.md">2048</a>
 - Status: 📒 Backlog
