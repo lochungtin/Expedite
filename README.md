@@ -26,13 +26,13 @@ This list will be expanded upon and updated as status for sub-projects change an
 - Status: 📒 Backlog
 
 ### <a href="Mastermind/README.md">Mastermind</a>
-- Status: 🗒️ Researching
+- Status: 🛠️ Work in Progress
 
 ### <a href="MineSweeper/README.md">Mine Sweeper</a>
 - Status: 📒 Backlog
 
 ### <a href="Nonogram/README.md">Nonogram</a>
-- Status: 🛠️ Work in Progress
+- Status: 🛑 Paused
 
 ### <a href="Numberlink/README.md">Numberlink</a>
 - Status: 📒 Backlog
