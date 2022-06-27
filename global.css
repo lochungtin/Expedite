@@ -32,10 +32,6 @@ button {
     outline: none;
 }
 
-canvas {
-    border: 1px solid #fff;
-}
-
 .tlcorner {
     left: 50px;
     position: absolute;
