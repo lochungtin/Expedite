@@ -1,6 +1,8 @@
 * {
     margin: 0;
     padding: 0;
+    color: #fff;
+    font-family: 'Montserrat';
 }
 
 html,
@@ -30,6 +32,10 @@ button {
     background-color: transparent;
     border: none;
     outline: none;
+}
+
+span {
+    color: #dfbd69;
 }
 
 .tlcorner {
@@ -78,10 +84,16 @@ button {
 .menuBtn {
     border: 1px solid #dfbd69;
     border-radius: 17.5px;
-    color: #fff;
-    font-family: 'Montserrat';
-    font-size: 1.7ch;
+    font-size: 1.5ch;
     height: 35px;
     margin-bottom: 20px;
     width: 250px;
+}
+
+.infoTitle {
+    font-size: 30px;
+}
+
+.infoTextGap {
+    height: 7vh;
 }
