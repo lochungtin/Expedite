@@ -53,7 +53,7 @@ void printBoardWithConstraints(Game game)
     rRow += "\n";
     sRow += "\n";
 
-    vector<vector<int>> constraints = game.getConstraints();
+    vector<vector<Constraint>> constraints = game.getConstraints();
 
     // print column constraints
     cout << rRow << hex;
@@ -68,7 +68,7 @@ void printBoardWithConstraints(Game game)
                 int k = j - maxConstraintNum;
                 int l = i - maxConstraintNum + constraints[k + dim].size();
                 if (l >= 0)
-                    cout << "| " << constraints[k + dim][l] << " ";
+                    cout << "| " << constraints[k + dim][l].length << " ";
                 else
                     cout << "|   ";
             }
@@ -85,7 +85,7 @@ void printBoardWithConstraints(Game game)
         {
             int l = j - maxConstraintNum + constraints[i].size();
             if (l >= 0)
-                cout << "| " << constraints[i][l] << " ";
+                cout << "| " << constraints[i][l].length << " ";
             else
                 cout << "|   ";
         }
