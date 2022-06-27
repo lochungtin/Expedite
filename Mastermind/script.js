@@ -82,7 +82,12 @@ let response;
 // initialise game
 const init = () => {
     // setup variables
-    target = [rand(), rand(), rand(), rand()];
+    target = [];
+    
+    let nums = [0, 1, 2, 3, 4, 5, 6, 7];
+    for (let i = 0; i < 4; ++i)
+        target.push(nums.splice(rand(nums.length), 1)[0]);
+
     tCount = count(target);
 
     rowIndex = 0;
@@ -166,9 +171,9 @@ const render = () => {
 }
 
 // ===== AUX =====
-// random number generator [0, 7]
-const rand = () => {
-    return Math.floor(Math.random() * 8);
+// random number generator [0, n)
+const rand = n => {
+    return Math.floor(Math.random() * n);
 }
 
 // create count array
@@ -201,7 +206,7 @@ const drawRoundRect = (x, y, dim, radius, color, select, outline = false) => {
             ctx.fillStyle = color;
             ctx.fill();
         }
-    
+
         ctx.strokeStyle = select ? '#ffffff' : '#181818';
         ctx.stroke();
     }
