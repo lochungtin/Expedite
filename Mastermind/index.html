@@ -7,21 +7,39 @@
     </title>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel='stylesheet' href='../global.css' />
+    <script src='../script.js'></script>
 </head>
 
 <body>
-    <button class="ltcorner">
-        <img height="40" src="../assets/icons/menu.svg" />
+    <button class="tlcorner" onclick='toggleSettings(true)'>
+        <img height="40" src="../assets/icons/settings.svg" alt='settings' />
     </button>
 
+    <button class="trcorner" onclick='toggleInfo(true)'>
+        <img height="40" src="../assets/icons/info.svg" alt='info' />
+    </button>
+
+    <div class="expandable settings" id="settings">
+        <button onclick='toggleSettings(false)'>
+            <img height="40" src="../assets/icons/close.svg" alt='close' />
+        </button>
+
+        <div class="menuContent">
+            <button id='btn0' class='menuBtn'>New Game</button>
+            <button id='btn1' class='menuBtn'>Vision Tags</button>
+        </div>
+    </div>
+
+    <div class="expandable info" id="info">
+        <button onclick='toggleInfo(false)'>
+            <img height="40" src="../assets/icons/close.svg" alt='close' />
+        </button>
+    </div>
+
     <main>
-        <canvas id='canvas' width='600' height='800'>
+        <canvas id='canvas' width='600' height='900'>
             Your browser does not support this website
         </canvas>
-        <div class='btns'>
-            <button id='btn0' class='btn'>New Game</button>
-            <button id='btn1' class='btn'>Viz Tags</button>
-        </div>
     </main>
 </body>
 
