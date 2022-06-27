@@ -1,7 +1,7 @@
 // ===== CONST =====
-let responseCodeOffset = [0, 1, 3, 6, 10];
+const responseCodeOffset = [0, 1, 3, 6, 10];
 
-let keyMap = {
+const keyMap = {
     q: 0,
     w: 1,
     e: 2,
@@ -12,7 +12,7 @@ let keyMap = {
     f: 7,
 };
 
-let responseMap = {
+const responseMap = {
     0: '0000',
     1: '1000',
     2: '2000',
@@ -29,6 +29,36 @@ let responseMap = {
     13: '2221',
     14: '2222',
 };
+
+const colorMap = {
+    0: '#fc5c65',
+    1: '#fed330',
+    2: '#26de81',
+    3: '#4b7bec',
+    4: '#fd9644',
+    5: '#a55eea',
+    6: '#d1d8e0',
+    7: '#778ca3',
+};
+
+const responseColorMap = {
+    '1': '#ffffff',
+    '2': '#dfbd69',
+}
+
+const C_PAD_T = 2;
+const C_PAD_L = 2;
+
+const C_DIM = 60;
+const C_DIM_R = 10;
+const C_DIM_GAP = 75;
+
+const R_PAD_T = 17;
+const R_PAD_L = 350;
+
+const R_DIM = 25;
+const R_DIM_R = 5;
+const R_DIM_GAP = 30;
 
 // ===== DOC =====
 let canvas;
@@ -47,6 +77,7 @@ let response;
 // ===== FUNC =====
 // initialise game
 const init = () => {
+    // setup variables
     target = [rand(), rand(), rand(), rand()];
     tCount = count(target);
 
@@ -55,9 +86,14 @@ const init = () => {
 
     rows = new Array(12);
     for (let i = 0; i < 12; ++i)
-        rows[i] = new Array(4).fill(-1);
+        rows[i] = new Array(4).fill(8);
 
     response = new Array(12).fill('0000');
+
+    console.log(target);
+
+    // render canvasz
+    render();
 }
 
 // mark guess cell
@@ -66,16 +102,22 @@ const mark = key => {
     if (map === undefined)
         return;
     rows[rowIndex][cellIndex] = map;
+
+    render();
 }
 
 // evaluate guess
 const guess = () => {
+    for (let i = 0; i < 4; ++i)
+        if (rows[rowIndex][i] == 8)
+            return;
+
     // calculate response code
     let gCount = count(rows[rowIndex]);
 
     let colors = 8;
     for (let i = 0; i < 8; ++i)
-        colors -= Math.abs(dataCount[i] - gCount[i]);
+        colors -= Math.abs(tCount[i] - gCount[i]);
     colors /= 2;
 
     let correct = 0;
@@ -84,6 +126,36 @@ const guess = () => {
 
     // update response
     response[rowIndex] = responseMap[responseCodeOffset[colors] + correct];
+
+    rowIndex++;
+    cellIndex = 0;
+    render();
+}
+
+// render canvas
+const render = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < 12; ++i) {
+        for (let j = 0; j < 4; ++j) {
+            drawRoundRect(
+                C_PAD_L + j * C_DIM_GAP,
+                C_PAD_T + (11 - i) * C_DIM_GAP,
+                C_DIM,
+                C_DIM_R,
+                colorMap[rows[i][j]],
+                i == rowIndex && j == cellIndex
+            );
+
+            drawRoundRect(
+                R_PAD_L + j * R_DIM_GAP,
+                R_PAD_T + (11 - i) * C_DIM_GAP,
+                R_DIM,
+                R_DIM_R,
+                responseColorMap[response[i][j]],
+            );
+        }
+    }
 }
 
 // ===== AUX =====
@@ -99,6 +171,31 @@ const count = arr => {
     return rt;
 }
 
+// draw rounded rectangle
+const drawRoundRect = (x, y, dim, radius, color, select) => {
+    ctx.beginPath();
+
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + dim - radius, y);
+    ctx.quadraticCurveTo(x + dim, y, x + dim, y + radius);
+    ctx.lineTo(x + dim, y + dim - radius);
+    ctx.quadraticCurveTo(x + dim, y + dim, x + dim - radius, y + dim);
+    ctx.lineTo(x + radius, y + dim);
+    ctx.quadraticCurveTo(x, y + dim, x, y + dim - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+
+    if (color) {
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+
+    ctx.strokeStyle = select ? '#ffffff' : '#181818';
+    ctx.stroke();
+
+    ctx.closePath();
+}
+
 // ===== BACKGROUND =====
 // key stroke listener
 document.addEventListener('keydown', event => {
@@ -106,12 +203,32 @@ document.addEventListener('keydown', event => {
         case 'ArrowLeft':
             if (cellIndex === 0)
                 return;
-            return cellIndex--;
+
+            cellIndex--;
+            return render();
 
         case 'ArrowRight':
             if (cellIndex === 3)
                 return;
-            return cellIndex++;
+
+            cellIndex++;
+            return render();
+
+        case '1':
+            cellIndex = 0;
+            return render();
+
+        case '2':
+            cellIndex = 1;
+            return render();
+
+        case '3':
+            cellIndex = 2;
+            return render();
+
+        case '4':
+            cellIndex = 3;
+            return render();
 
         case 'Enter':
             return guess();
@@ -125,6 +242,9 @@ window.onload = () => {
     // get doc vars
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
+
+    // set ctx stroke styles
+    ctx.lineWidth = 3;
 
     // initialise game
     init();
