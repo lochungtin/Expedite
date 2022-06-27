@@ -46,15 +46,19 @@ const responseColorMap = {
     '2': '#dfbd69',
 }
 
+const L_PAD_L = 40;
+const LT_PAD_T = 38;
+const LT_PAD_L = 70;
+
 const C_PAD_T = 2;
-const C_PAD_L = 2;
+const C_PAD_L = 157.5;
 
 const C_DIM = 60;
 const C_DIM_R = 10;
 const C_DIM_GAP = 75;
 
 const R_PAD_T = 17;
-const R_PAD_L = 350;
+const R_PAD_L = 482.5;
 
 const R_DIM = 25;
 const R_DIM_R = 5;
@@ -108,6 +112,9 @@ const mark = key => {
 
 // evaluate guess
 const guess = () => {
+    if (rowIndex == 12 || response[rowIndex - 1] === '2222')
+        return init();
+
     for (let i = 0; i < 4; ++i)
         if (rows[rowIndex][i] == 8)
             return;
@@ -134,7 +141,7 @@ const guess = () => {
 
 // render canvas
 const render = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(150, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < 12; ++i) {
         for (let j = 0; j < 4; ++j) {
@@ -172,7 +179,7 @@ const count = arr => {
 }
 
 // draw rounded rectangle
-const drawRoundRect = (x, y, dim, radius, color, select) => {
+const drawRoundRect = (x, y, dim, radius, color, select, outline = false) => {
     ctx.beginPath();
 
     ctx.moveTo(x + radius, y);
@@ -185,13 +192,19 @@ const drawRoundRect = (x, y, dim, radius, color, select) => {
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
 
-    if (color) {
-        ctx.fillStyle = color;
-        ctx.fill();
+    if (outline) {
+        ctx.strokeStyle = color;
+        ctx.stroke();
     }
-
-    ctx.strokeStyle = select ? '#ffffff' : '#181818';
-    ctx.stroke();
+    else {
+        if (color) {
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+    
+        ctx.strokeStyle = select ? '#ffffff' : '#181818';
+        ctx.stroke();
+    }
 
     ctx.closePath();
 }
@@ -245,6 +258,24 @@ window.onload = () => {
 
     // set ctx stroke styles
     ctx.lineWidth = 3;
+    ctx.font = '20px Montserrat';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = "center";
+
+    // draw labels
+    Object.entries(keyMap).forEach(([key, val], index) => {
+        drawRoundRect(
+            L_PAD_L,
+            C_PAD_T + index * C_DIM_GAP,
+            C_DIM,
+            C_DIM_R,
+            colorMap[index],
+            false,
+            true,
+        );
+
+        ctx.fillText(key.toUpperCase(), LT_PAD_L, LT_PAD_T + index * C_DIM_GAP);
+    });
 
     // initialise game
     init();
