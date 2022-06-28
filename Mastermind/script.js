@@ -46,10 +46,12 @@ const responseColorMap = {
     '2': '#dfbd69',
 }
 
+// label dimensions
 const L_PAD_L = 40;
 const LT_PAD_T = 38;
 const LT_PAD_L = 70;
 
+// cell dimensions
 const C_PAD_T = 2;
 const C_PAD_L = 157.5;
 
@@ -57,6 +59,7 @@ const C_DIM = 60;
 const C_DIM_R = 10;
 const C_DIM_GAP = 75;
 
+// response dimensions
 const R_PAD_T = 17;
 const R_PAD_L = 482.5;
 
