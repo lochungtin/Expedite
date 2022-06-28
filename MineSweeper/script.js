@@ -43,11 +43,15 @@ let ctx;
 
 // ===== DATA =====
 let grid;
+let bombs;
+let seeded;
 
 // ===== FUNC =====
 // initialise game
 const init = () => {
     grid = new Array(9);
+    bombs = new Array(9);
+    seeded = false;
     for (let i = 0; i < 9; ++i) {
         grid[i] = new Array(9).fill(0);
     }
@@ -57,6 +61,24 @@ const init = () => {
             grid[i][j] = Math.floor(Math.random() * 12);
 
     render();
+}
+
+// seed game [called after first click]
+const seed = (x, y) => {
+    let possiblePositions = new Array(80);
+    let pressed = y * 9 + x;
+
+    let pointer = 0;
+    for (let i = 0; i < 81; ++i)
+        if (i != pressed)
+            possiblePositions[pointer++] = i;
+
+    for (let i = 0; i < 9; ++i)
+        bombs[i] = possiblePositions.splice(Math.floor(Math.random() * (79 - i)), 1)[0];
+
+    console.log(bombs);
+
+    seeded = true;
 }
 
 // render canvas
@@ -119,6 +141,7 @@ const drawRoundRect = (x, y, fill, stroke) => {
     ctx.closePath();
 }
 
+// draw bomb graphic
 const drawBomb = (x, y) => {
     let p = new Path2D();
     p.addPath(new Path2D(BOMB_PATH), new DOMMatrix().translateSelf(x, y).scaleSelf(0.04, 0.04));
@@ -127,6 +150,7 @@ const drawBomb = (x, y) => {
     ctx.fill(p);
 }
 
+// draw flag graphic
 const drawFlag = (x, y) => {
     let p = new Path2D();
     p.addPath(new Path2D(FLAG_PATH), new DOMMatrix().translateSelf(x, y).scaleSelf(0.04, 0.04));
@@ -149,4 +173,5 @@ window.onload = () => {
 
     // initialise game
     init();
+    seed(0, 0);
 }
