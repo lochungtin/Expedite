@@ -159,11 +159,38 @@ const drawFlag = (x, y) => {
     ctx.fill(p);
 }
 
+// handle click event
+const click = (relX, relY, btn) => {
+    console.log(relX, relY);
+}
+
 // ===== BACKGROUND =====
 window.onload = () => {
     // get doc vars
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
+
+    canvas.addEventListener('click', event => {
+        event.preventDefault();
+
+        let rect = canvas.getBoundingClientRect();
+        click(
+            Math.floor((event.clientX - rect.left - C_PAD_L) / C_DIM_GAP),
+            Math.floor((event.clientY - rect.top - C_PAD_T) / C_DIM_GAP),
+            0
+        );
+    })
+
+    canvas.addEventListener('contextmenu', event => {
+        event.preventDefault();
+
+        let rect = canvas.getBoundingClientRect();
+        click(
+            Math.floor((event.clientX - rect.left - C_PAD_L) / C_DIM_GAP),
+            Math.floor((event.clientY - rect.top - C_PAD_T) / C_DIM_GAP),
+            1
+        );
+    });
 
     // set ctx styles
     ctx.lineWidth = 2;
