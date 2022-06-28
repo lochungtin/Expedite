@@ -261,7 +261,7 @@ window.onload = () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    // set ctx stroke styles
+    // set ctx styles
     ctx.lineWidth = 3;
     ctx.font = '20px Montserrat';
     ctx.fillStyle = '#ffffff';
