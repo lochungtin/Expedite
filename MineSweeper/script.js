@@ -65,7 +65,6 @@ window.onload = () => {
     ctx = canvas.getContext('2d');
 
     // set ctx stroke styles
-    ctx.strokeStyle = '#444444';
     ctx.lineWidth = 2;
 
     ctx.font = '20px Montserrat';
