@@ -56,6 +56,7 @@ let dataGrid;
 let grid;
 let bombs;
 let first;
+let gameover;
 
 // ===== FUNC =====
 // initialise game
@@ -64,6 +65,7 @@ const init = () => {
     grid = new Array(9);
     bombs = new Array(9);
     first = true;
+    gameover = false;
 
     for (let i = 0; i < 9; ++i) {
         grid[i] = new Array(9).fill(UNKNOWN);
@@ -109,13 +111,14 @@ const seed = (px, py) => {
             if (dataGrid[y][x] === UNKNOWN)
                 dataGrid[y][x] = EMPTY;
 
-    console.log(dataGrid);
-
     first = false;
 }
 
 // handle click event
 const click = (relX, relY, btn) => {
+    if (gameover)
+        return init();
+
     if (first)
         seed(relX, relY);
 
@@ -127,7 +130,12 @@ const click = (relX, relY, btn) => {
             grid[relY][relX] = UNKNOWN;
     }
     else {
-        reveal(relX, relY);
+        if (dataGrid[relY][relX] === BOMB) {
+            gameover = true;
+            return render(true);
+        }
+        else
+            reveal(relX, relY);
     }
 
     render();
