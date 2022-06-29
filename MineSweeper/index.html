@@ -14,28 +14,28 @@
 </head>
 
 <body>
-    <button class="tlcorner" onclick='toggleSettings(true)'>
-        <img height="40" src="../assets/icons/settings.svg" alt='settings' />
+    <button class='tlcorner' onclick='toggleSettings(true)'>
+        <img height='40' src='../assets/icons/settings.svg' alt='settings' />
     </button>
 
-    <button class="trcorner" onclick='toggleInfo(true)'>
-        <img height="40" src="../assets/icons/info.svg" alt='info' />
+    <button class='trcorner' onclick='toggleInfo(true)'>
+        <img height='40' src='../assets/icons/info.svg' alt='info' />
     </button>
 
-    <div class="expandable settings" id="settings">
+    <div class='expandable settings' id='settings'>
         <button onclick='toggleSettings(false)'>
-            <img height="40" src="../assets/icons/close.svg" alt='close' />
+            <img height='40' src='../assets/icons/close.svg' alt='close' />
         </button>
 
-        <div class="menuContent">
-            <button id='btn0' class='menuBtn'>New Game</button>
+        <div class='menuContent'>
+            <button id='btn0' class='menuBtn' onclick='init()'>New Game</button>
             <button id='btn1' class='menuBtn'>Vision Tags</button>
         </div>
     </div>
 
-    <div class="expandable info" id="info">
+    <div class='expandable info' id='info'>
         <button onclick='toggleInfo(false)'>
-            <img height="40" src="../assets/icons/close.svg" alt='close' />
+            <img height='40' src='../assets/icons/close.svg' alt='close' />
         </button>
     </div>
 
