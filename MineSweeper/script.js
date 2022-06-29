@@ -1,4 +1,11 @@
 // ===== CONST =====
+// representation
+const UNKNOWN = 0;
+const EMPTY = 9;
+const FLAG = 10;
+const BOMB = 11;
+
+// color mapping
 const fillMap = {
     9: '#dfbd69',
 };
@@ -16,6 +23,9 @@ const strokeMap = {
     10: '#ffffff',
     11: '#ffffff',
 };
+
+// neighbour relative index
+const REL = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
 
 // cell dimensions
 const C_PAD_T = 250;
@@ -42,43 +52,78 @@ let canvas;
 let ctx;
 
 // ===== DATA =====
+let dataGrid;
 let grid;
 let bombs;
-let seeded;
+let first;
 
 // ===== FUNC =====
 // initialise game
 const init = () => {
+    dataGrid = new Array(9);
     grid = new Array(9);
     bombs = new Array(9);
-    seeded = false;
+    first = true;
+
     for (let i = 0; i < 9; ++i) {
         grid[i] = new Array(9).fill(0);
+        dataGrid[i] = new Array(9).fill(0);
     }
-
-    for (let i = 0; i < 9; ++i)
-        for (let j = 0; j < 9; ++j)
-            grid[i][j] = Math.floor(Math.random() * 12);
 
     render();
 }
 
 // seed game [called after first click]
-const seed = (x, y) => {
-    let possiblePositions = new Array(80);
-    let pressed = y * 9 + x;
+const seed = (px, py) => {
+    let possiblePositions = new Array();
+    let pressed = py * 9 + px;
 
-    let pointer = 0;
+    let toRemove = getNeighbours(px, py).map(([x, y]) => y * 9 + x);
+    toRemove.push(pressed);
+
     for (let i = 0; i < 81; ++i)
-        if (i != pressed)
-            possiblePositions[pointer++] = i;
+        if (!toRemove.includes(i))
+            possiblePositions.push(i);
 
-    for (let i = 0; i < 9; ++i)
-        bombs[i] = possiblePositions.splice(Math.floor(Math.random() * (79 - i)), 1)[0];
+    let size = possiblePositions.length - 1;
+    for (let i = 0; i < 9; ++i) {
+        let index = possiblePositions.splice(Math.floor(Math.random() * (size - i)), 1)[0];
 
-    console.log(bombs);
+        let y = Math.floor(index / 9);
+        let x = index % 9;
 
-    seeded = true;
+        bombs[i] = [x, y];
+        dataGrid[y][x] = BOMB;
+    }
+
+    bombs.forEach(([x, y]) => {
+        getNeighbours(x, y)
+            .forEach(([nx, ny]) => {
+                if (dataGrid[ny][nx] != BOMB)
+                    dataGrid[ny][nx]++;
+            });
+    });
+
+    first = false;
+}
+
+// handle click event
+const click = (relX, relY, btn) => {
+    if (first)
+        seed(relX, relY);
+
+    let data = grid[relY][relX];
+    if (btn) {
+        if (data === UNKNOWN)
+            grid[relY][relX] = FLAG;
+        else if (data === FLAG)
+            grid[relY][relX] = UNKNOWN;
+    }
+    else {
+
+    }
+
+    render();
 }
 
 // render canvas
@@ -87,7 +132,7 @@ const render = () => {
 
     for (let i = 0; i < 9; ++i)
         for (let j = 0; j < 9; ++j) {
-            let data = grid[i][j];
+            let data = dataGrid[i][j];
 
             drawRoundRect(
                 C_PAD_L + j * C_DIM_GAP,
@@ -96,7 +141,7 @@ const render = () => {
                 strokeMap[data],
             );
 
-            if (data > 0 && data < 9) {
+            if (data > UNKNOWN && data < EMPTY) {
                 ctx.fillStyle = '#ffffff';
                 ctx.fillText(
                     data,
@@ -105,10 +150,10 @@ const render = () => {
                 );
             }
 
-            if (data == 10)
+            if (data === FLAG)
                 drawFlag(G_PAD_L + j * C_DIM_GAP, G_PAD_T + i * C_DIM_GAP);
 
-            if (data == 11)
+            if (data === BOMB)
                 drawBomb(G_PAD_L + j * C_DIM_GAP, G_PAD_T + i * C_DIM_GAP);
         }
 }
@@ -159,9 +204,16 @@ const drawFlag = (x, y) => {
     ctx.fill(p);
 }
 
-// handle click event
-const click = (relX, relY, btn) => {
-    console.log(relX, relY);
+// get valid neighbours
+const getNeighbours = (x, y) => {
+    return REL
+        .map(([dx, dy]) => [x + dx, y + dy])
+        .filter(([nx, ny]) => valid(nx) && valid(ny));
+}
+
+// check if index is out of bounds
+const valid = x => {
+    return x > -1 && x < 9;
 }
 
 // ===== BACKGROUND =====
@@ -200,5 +252,4 @@ window.onload = () => {
 
     // initialise game
     init();
-    seed(0, 0);
 }
