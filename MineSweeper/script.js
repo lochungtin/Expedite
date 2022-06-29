@@ -66,8 +66,8 @@ const init = () => {
     first = true;
 
     for (let i = 0; i < 9; ++i) {
-        grid[i] = new Array(9).fill(0);
-        dataGrid[i] = new Array(9).fill(0);
+        grid[i] = new Array(9).fill(UNKNOWN);
+        dataGrid[i] = new Array(9).fill(UNKNOWN);
     }
 
     render();
@@ -86,7 +86,7 @@ const seed = (px, py) => {
             possiblePositions.push(i);
 
     let size = possiblePositions.length - 1;
-    for (let i = 0; i < 9; ++i) {
+    for (let i = 0; i < 10; ++i) {
         let index = possiblePositions.splice(Math.floor(Math.random() * (size - i)), 1)[0];
 
         let y = Math.floor(index / 9);
@@ -104,6 +104,13 @@ const seed = (px, py) => {
             });
     });
 
+    for (let y = 0; y < 9; ++y)
+        for (let x = 0; x < 9; ++x)
+            if (dataGrid[y][x] === UNKNOWN)
+                dataGrid[y][x] = EMPTY;
+
+    console.log(dataGrid);
+
     first = false;
 }
 
@@ -120,19 +127,21 @@ const click = (relX, relY, btn) => {
             grid[relY][relX] = UNKNOWN;
     }
     else {
-
+        reveal(relX, relY);
     }
 
     render();
 }
 
 // render canvas
-const render = () => {
+const render = (shownAnswer = false) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < 9; ++i)
         for (let j = 0; j < 9; ++j) {
-            let data = dataGrid[i][j];
+            let data = grid[i][j];
+            if (shownAnswer)
+                data = dataGrid[i][j];
 
             drawRoundRect(
                 C_PAD_L + j * C_DIM_GAP,
@@ -159,6 +168,7 @@ const render = () => {
 }
 
 // ===== AUX =====
+// ===== DRAW =====
 // draw rounded rectangle
 const drawRoundRect = (x, y, fill, stroke) => {
     ctx.beginPath();
@@ -202,6 +212,21 @@ const drawFlag = (x, y) => {
 
     ctx.fillStyle = '#dfbd69';
     ctx.fill(p);
+}
+
+// ===== GRID =====
+// recursive reveal of empty cells
+const reveal = (x, y) => {
+    let data = dataGrid[y][x];
+
+    grid[y][x] = data;
+
+    if (data === EMPTY) {
+        getNeighbours(x, y).forEach(([nx, ny]) => {
+            if (grid[ny][nx] === UNKNOWN)
+                reveal(nx, ny);
+        });
+    }
 }
 
 // get valid neighbours
