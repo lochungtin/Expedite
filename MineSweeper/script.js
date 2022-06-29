@@ -21,7 +21,7 @@ const strokeMap = {
     7: '#dfbd69',
     8: '#dfbd69',
     10: '#ffffff',
-    11: '#ffffff',
+    11: '#fc5c65',
 };
 
 // neighbour relative index
@@ -55,6 +55,7 @@ let ctx;
 let dataGrid;
 let grid;
 let bombs;
+let flags;
 let first;
 let gameover;
 
@@ -64,6 +65,7 @@ const init = () => {
     dataGrid = new Array(9);
     grid = new Array(9);
     bombs = new Array(9);
+    flags = 0;
     first = true;
     gameover = false;
 
@@ -124,16 +126,31 @@ const click = (relX, relY, btn) => {
 
     let data = grid[relY][relX];
     if (btn) {
-        if (data === UNKNOWN)
+        if (data === UNKNOWN) {
             grid[relY][relX] = FLAG;
-        else if (data === FLAG)
+            flags++;
+        }
+        else if (data === FLAG) {
             grid[relY][relX] = UNKNOWN;
+            flags--;
+        }
+
+        if (flags === 10) {
+            let complete = true;
+            bombs.forEach(([x, y]) => {
+                if (grid[y][x] !== FLAG)
+                    complete = false;
+            });
+
+            if (complete) {
+                gameover = true;
+                return render(true);
+            }
+        }
     }
     else {
-        if (dataGrid[relY][relX] === BOMB) {
+        if (dataGrid[relY][relX] === BOMB)
             gameover = true;
-            return render(true);
-        }
         else
             reveal(relX, relY);
     }
@@ -142,13 +159,13 @@ const click = (relX, relY, btn) => {
 }
 
 // render canvas
-const render = (shownAnswer = false) => {
+const render = (win = false) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < 9; ++i)
         for (let j = 0; j < 9; ++j) {
             let data = grid[i][j];
-            if (shownAnswer)
+            if (gameover)
                 data = dataGrid[i][j];
 
             drawRoundRect(
@@ -171,7 +188,10 @@ const render = (shownAnswer = false) => {
                 drawFlag(G_PAD_L + j * C_DIM_GAP, G_PAD_T + i * C_DIM_GAP);
 
             if (data === BOMB)
-                drawBomb(G_PAD_L + j * C_DIM_GAP, G_PAD_T + i * C_DIM_GAP);
+                if (win)
+                    drawFlag(G_PAD_L + j * C_DIM_GAP, G_PAD_T + i * C_DIM_GAP, true);
+                else
+                    drawBomb(G_PAD_L + j * C_DIM_GAP, G_PAD_T + i * C_DIM_GAP);
         }
 }
 
@@ -214,11 +234,11 @@ const drawBomb = (x, y) => {
 }
 
 // draw flag graphic
-const drawFlag = (x, y) => {
+const drawFlag = (x, y, win = false) => {
     let p = new Path2D();
     p.addPath(new Path2D(FLAG_PATH), new DOMMatrix().translateSelf(x, y).scaleSelf(0.04, 0.04));
 
-    ctx.fillStyle = '#dfbd69';
+    ctx.fillStyle = win ? '#26de81' : '#dfbd69';
     ctx.fill(p);
 }
 
