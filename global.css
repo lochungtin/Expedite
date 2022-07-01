@@ -97,3 +97,16 @@ span {
 .infoTextGap {
     height: 7vh;
 }
+
+.infoRow {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.infoTextCell {
+    margin-left: 30px;
+    width: 200px;
+}
