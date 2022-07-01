@@ -29,15 +29,15 @@ This list will be expanded upon and updated as status for sub-projects change an
 - Web Game: 📒 Backlog
 
 ### <a href="Mastermind/README.md">Mastermind</a>
-- Status:   🛠️ Work in Progress
+- Status:   🛑 Paused
 - Web Game: ✅ Complete
 
 ### <a href="MineSweeper/README.md">Mine Sweeper</a>
-- Status:   📒 Backlog
+- Status:   🛠️ Work in Progress
 - Web Game: ✅ Complete
 
 ### <a href="Nonogram/README.md">Nonogram</a>
-- Status:   🛑 Paused
+- Status:   🛠️ Work in Progress
 - Web Game: 📒 Backlog
 
 ### <a href="Numberlink/README.md">Numberlink</a>
