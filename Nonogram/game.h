@@ -88,7 +88,7 @@ private:
         }
     }
 
-    // analyse line partitions
+    // analyse line partitions, get marked and unmarked sections
     void analysePartitions(string target, vector<Section> *marked, vector<Section> *empty)
     {
         Section markedSection;
@@ -234,12 +234,15 @@ public:
             }
         }
 
+        // fill all cells are the certain
         for (int line = 0; line < lines; ++line)
             fillCertain(line);
 
+        // mark completion of lines
         for (int line = 0; line < lines; ++line)
             isComplete(line);
 
+        // rule pruning
         for (int line = 0; line < lines; ++line)
         {
             if (completion[line])

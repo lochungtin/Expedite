@@ -57,14 +57,14 @@ int main()
 
     game.setCell(11, 4, false);
 
-    game.printBoard();
+    game.print();
 
-    // solved board
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    game.solve();
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    game.printBoard();
+    // // solved board
+    // std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    // game.solve();
+    // std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    // game.printBoard();
 
-    // time
-    cout << "Solved in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << endl;
+    // // time
+    // cout << "Solved in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << endl;
 }
