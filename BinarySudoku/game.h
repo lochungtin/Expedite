@@ -2,12 +2,15 @@
 #define GAME_H
 
 #include <iostream>
+#include <map>
 #include <string>
 
 #include "../headers/binaryboard.h"
+#include "../headers/printer.h"
 
 using std::cout;
 using std::endl;
+using std::map;
 using std::string;
 
 class Game
@@ -26,25 +29,7 @@ public:
 
     void print()
     {
-        string row = "+";
-        for (int i = 0; i < dim; ++i)
-            row += "---+";
-
-        cout << row << "\n|";
-        for (int i = 0; i < dim; ++i)
-        {
-            for (int j = 0; j < dim; ++j)
-            {
-                char cell = board.read(i, j);
-                if (cell == '-')
-                    cout << "   |";
-                else
-                    cout << (cell == '0' ? " ░ |" : " ▓ |");
-            }
-
-            cout << "\n" + row + (i == dim - 1 ? "" : "\n|");
-        }
-        cout << endl;
+        printBoard(board, map<char, string>{{'-', " "}, {'0', "░"}, {'1', "▓"}});
     }
 };
 
