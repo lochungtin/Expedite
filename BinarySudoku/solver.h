@@ -156,6 +156,11 @@ public:
         completion = vector<bool>(dDim, false);
     }
 
+    /**
+     * @brief Run solver on board
+     *
+     * @return iterations taken to solve
+     */
     int run()
     {
         // update counts with preset values

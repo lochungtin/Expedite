@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include "game.h"
+#include "solver.h"
 
 using std::cout;
 using std::endl;
@@ -45,14 +46,14 @@ int main()
     }
     game.print();
 
-    // // solve game
-    // Solver solver = Solver(&game);
+    // solve game
+    Solver solver = Solver(&game);
 
-    // std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    // int iterations = solver.run();
-    // std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    // game.print();
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    int iterations = solver.run();
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    game.print();
 
     // print running time
-    // cout << "Solved in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs] | Iterations: " << iterations << endl;
+    cout << "Solved in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs] | Iterations: " << iterations << endl;
 }

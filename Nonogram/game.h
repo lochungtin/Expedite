@@ -69,6 +69,16 @@ public:
     }
 
     /**
+     * @brief Get the pointer to the Board object
+     *
+     * @return BinaryBoard pointer
+     */
+    BinaryBoard *getBoard()
+    {
+        return &board;
+    }
+
+    /**
      * @brief Prints game board with constraint information
      */
     void print()
