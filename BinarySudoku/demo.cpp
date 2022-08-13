@@ -12,8 +12,7 @@ int main()
     // create game
     Game game = Game(12);
 
-    // load game board with preset cells
-    {
+    { // load game board with preset cells
         game.setCell(0, 2, false);
         game.setCell(0, 4, true);
         game.setCell(0, 8, false);

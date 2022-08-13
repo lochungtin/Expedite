@@ -8,31 +8,6 @@
 using std::dec;
 using std::hex;
 
-// print board
-void printBoard(Game game)
-{
-    string board = game.getBoard();
-    int dim = game.getDim();
-    int cellCount = dim * dim;
-
-    string row = "+";
-    for (int i = 0; i < dim; ++i)
-        row += "---+";
-    row += "\n";
-
-    for (int i = 0; i < cellCount; ++i)
-    {
-        if (i % dim == 0)
-        {
-            if (i > 0)
-                cout << "\n";
-            cout << row << "|";
-        }
-        cout << " " << (game.getBoard()[i] == '-' ? " " : (game.getBoard()[i] == '0' ? "x" : "█")) << " |";
-    }
-    cout << "\n" + row << endl;
-}
-
 // print board along with constraints on the side
 void printBoardWithConstraints(Game game)
 {

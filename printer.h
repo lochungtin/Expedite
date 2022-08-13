@@ -18,11 +18,11 @@ using std::string;
  * @param length set length of the row separator
  * @return string - row separator
  */
-string createRowString(int length)
+string createRowString(int length, bool thick = false)
 {
     string row = "+";
     for (int i = 0; i < length; ++i)
-        row.append("---+");
+        row.append(thick ? "===" : "---").append("+");
 
     return row;
 }
