@@ -18,53 +18,53 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 ### <a href="2048/README.md">2048</a>
 
-- Status:   📒 Backlog
-- Web Game: 📒 Backlog
+-   Status: 📒 Backlog
+-   Web Game: 📒 Backlog
 
 ### <a href="BinarySudoku/README.md">Binary Sudoku</a>
 
-- Status:   ✅ Complete | Further Optimisation Pending
-- Web Game: 📒 Backlog
+-   Status: ✅ Complete
+-   Web Game: 📒 Backlog
 
 ### <a href="Kuromasu/README.md">Kuromasu</a>
 
-- Status:   📒 Backlog
-- Web Game: 📒 Backlog
+-   Status: 📒 Backlog
+-   Web Game: 📒 Backlog
 
 ### <a href="Mastermind/README.md">Mastermind</a>
 
-- Status:   🛑 Paused
-- Web Game: ✅ Complete
+-   Status: 🛑 Paused
+-   Web Game: ✅ Complete
 
 ### <a href="MineSweeper/README.md">Mine Sweeper</a>
 
-- Status:   🛠️ Work in Progress
-- Web Game: ✅ Complete
+-   Status: 🛠️ Work in Progress
+-   Web Game: ✅ Complete
 
 ### <a href="Nonogram/README.md">Nonogram</a>
 
-- Status:   🛠️ Work in Progress
-- Web Game: 📒 Backlog
+-   Status: 🛠️ Work in Progress
+-   Web Game: 📒 Backlog
 
 ### <a href="Numberlink/README.md">Numberlink</a>
 
-- Status:   📒 Backlog
-- Web Game: 📒 Backlog
+-   Status: 📒 Backlog
+-   Web Game: 📒 Backlog
 
 ### <a href="Slitherlink/README.md">Slitherlink</a>
 
-- Status:   📒 Backlog
-- Web Game: 📒 Backlog
+-   Status: 📒 Backlog
+-   Web Game: 📒 Backlog
 
 ### <a href="Snake/README.md">Snake</a>
 
-- Status:   📒 Backlog | <a href="https://github.com/lochungtin/snakeAI">Reinforcement AI Complete</a>
-- Web Game: 🛠️ Work in Progress
+-   Status: 📒 Backlog | <a href="https://github.com/lochungtin/snakeAI">Reinforcement AI Complete</a>
+-   Web Game: 🛠️ Work in Progress
 
 ### <a href="Sudoku/README.md">Sudoku</a>
 
-- Status:   📒 Backlog
-- Web Game: 📒 Backlog
+-   Status: 📒 Backlog
+-   Web Game: 📒 Backlog
 
 ## Other Related Work
 
