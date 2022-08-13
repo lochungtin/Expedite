@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "game.h"
-#include "../headers/binaryboard.h"
+#include "../binaryboard.h"
 
 using std::pair;
 using std::regex;

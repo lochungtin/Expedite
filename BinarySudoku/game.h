@@ -5,8 +5,8 @@
 #include <map>
 #include <string>
 
-#include "../headers/binaryboard.h"
-#include "../headers/printer.h"
+#include "../binaryboard.h"
+#include "../printer.h"
 
 using std::cout;
 using std::endl;
