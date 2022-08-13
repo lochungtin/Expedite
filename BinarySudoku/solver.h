@@ -150,19 +150,7 @@ public:
         // initialise 0 1 counters
         counts = vector<vector<int>>();
         for (int i = 0; i < dDim; ++i)
-        {
-            int c0 = 0;
-            int c1 = 0;
-
-            string line = board->read(i);
-            for (int j = 0; j < dim; ++j)
-            {
-                c0 += line[j] == '0' * 1;
-                c1 += line[j] == '1' * 1;
-            }
-
-            counts.emplace_back(vector<int>{c0, c1});
-        }
+            counts.emplace_back(vector<int>(2, 0));
 
         // initialise line completion array
         completion = vector<bool>(dDim, false);
@@ -170,6 +158,18 @@ public:
 
     int run()
     {
+        // update counts with preset values
+        for (int line = 0; line < dDim; ++line)
+        {
+            string lRead = board->read(line);
+            for (int j = 0; j < dim; ++j)
+            {
+                counts[line][0] += lRead[j] == '0' * 1;
+                counts[line][1] += lRead[j] == '1' * 1;
+            }
+        }
+
+        // start solver algorithm
         int iterations = -1;
         while (true)
         {
