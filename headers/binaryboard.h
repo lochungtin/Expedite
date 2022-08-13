@@ -21,7 +21,7 @@ public:
     /**
      * @brief Get the dimensions of the board
      *
-     * @return int
+     * @return board dimension
      */
     int getDim() const
     {
@@ -33,7 +33,7 @@ public:
      *
      * @param row row index relative to board
      * @param col col index relative to board
-     * @return char
+     * @return indexed character
      */
     char read(int row, int col) const
     {
@@ -44,7 +44,7 @@ public:
      * @brief Read lines from board string separated by dim length
      *
      * @param line line index [0 - dim * 2)
-     * @return string
+     * @return line string
      */
     string read(int line) const
     {
@@ -65,7 +65,7 @@ public:
     /**
      * @brief Read the entire board string
      *
-     * @return string
+     * @return complete board string
      */
     string read() const
     {

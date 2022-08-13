@@ -39,7 +39,7 @@ public:
     /**
      * @brief Get the pointer to the Board object
      *
-     * @return BinaryBoard*
+     * @return BinaryBoard pointer
      */
     BinaryBoard *getBoard()
     {
