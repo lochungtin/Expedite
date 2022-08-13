@@ -1,4 +1,3 @@
-#include <iostream>
 #include <regex>
 #include <utility>
 #include <vector>
@@ -6,8 +5,6 @@
 #include "game.h"
 #include "../headers/binaryboard.h"
 
-using std::cout;
-using std::endl;
 using std::pair;
 using std::regex;
 using std::sregex_iterator;
