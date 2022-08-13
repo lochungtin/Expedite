@@ -107,20 +107,24 @@ private:
     }
 
     /**
-     * @brief
+     * @brief Enforce pattern based rules, fill in empty cells by regex pattern
      *
-     * @param boardString
-     * @param rotated
+     * @param boardString   boardString
+     * @param rotated       rotation of board (0 or 1)
      */
     void enforcePatternRules(string boardString, int rotated)
     {
+        // iterate over all 6 patterns
         for (int actionIndex = 0; actionIndex < 6; ++actionIndex)
         {
             pair<regex, int> pattern = patterns[actionIndex];
             vector<int> positions;
             sregex_iterator itr = sregex_iterator(boardString.begin(), boardString.end() - 1, pattern.first);
+
+            // iterate over all matching patterns
             for (; itr != sregex_iterator(); ++itr)
             {
+                // forbid updates on edge matches
                 int matchStart = (*itr).position(0);
                 if (dim - matchStart % dim > 2)
                 {
