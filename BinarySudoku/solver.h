@@ -1,3 +1,4 @@
+#include <iostream>
 #include <regex>
 #include <utility>
 #include <vector>
@@ -5,17 +6,17 @@
 #include "game.h"
 #include "../headers/binaryboard.h"
 
+using std::cout;
+using std::endl;
 using std::pair;
 using std::regex;
 using std::sregex_iterator;
 using std::vector;
 
-#define PATTERN_REGEX_PAIRS \
-    vector<pair<regex, int>> { pair<regex, int>(regex("-11"), 0), pair<regex, int>(regex("-00"), 0), pair<regex, int>(regex("11-"), 2), pair<regex, int>(regex("00-"), 2), pair<regex, int>(regex("1-1"), 1), pair<regex, int>(regex("0-0"), 1) }
-
 class Solver
 {
 private:
+    // ===== variables =====
     Game *game;
     BinaryBoard *board;
 
@@ -28,6 +29,15 @@ private:
 
     bool boardComplete = false;
     vector<bool> completion;
+
+    vector<pair<regex, int>> patterns = vector<pair<regex, int>>{
+        pair<regex, int>(regex("-11"), 0), // row double left 1
+        pair<regex, int>(regex("-00"), 0), // row double left 0
+        pair<regex, int>(regex("11-"), 2), // row double right 1
+        pair<regex, int>(regex("00-"), 2), // row double right 0
+        pair<regex, int>(regex("1-1"), 1), // row single gap 1
+        pair<regex, int>(regex("0-0"), 1), // row single gap 0
+    };
 
     // ===== auxiliary functions =====
     /**
@@ -49,8 +59,8 @@ private:
         int cLine = index % dim + dim;
         counts[rLine][0] += !isOne * 1;
         counts[rLine][1] += isOne * 1;
-        counts[cLine][0] += isOne * 1;
         counts[cLine][0] += !isOne * 1;
+        counts[cLine][1] += isOne * 1;
 
         // maintain line completion status
         if (counts[rLine][0] + counts[rLine][1] == dim)
@@ -85,46 +95,104 @@ private:
         return line * dim + index;
     }
 
+    /**
+     * @brief Convert normal indexing to rotated indexing
+     *
+     * @param index normal index value
+     * @return rotated index value
+     */
+    int indexRotation(int index)
+    {
+        return index % dim * dim + (index / dim);
+    }
+
+    /**
+     * @brief
+     *
+     * @param boardString
+     * @param rotated
+     */
+    void enforcePatternRules(string boardString, int rotated)
+    {
+        for (int actionIndex = 0; actionIndex < 6; ++actionIndex)
+        {
+            pair<regex, int> pattern = patterns[actionIndex];
+            vector<int> positions;
+            sregex_iterator itr = sregex_iterator(boardString.begin(), boardString.end() - 1, pattern.first);
+            for (; itr != sregex_iterator(); ++itr)
+            {
+                int matchStart = (*itr).position(0);
+                if (dim - matchStart % dim > 2)
+                {
+                    int index = matchStart + pattern.second;
+                    if (rotated)
+                        index = indexRotation(index);
+
+                    setCell(index, actionIndex % 2);
+                }
+            }
+        }
+    }
+
 public:
     Solver(Game *game) : game(game)
     {
+        // set board pointer
         board = game->getBoard();
 
+        // store dimension
         dim = board->getDim();
         hDim = dim / 2;
         dDim = dim * 2;
         cellCount = dim * dim;
 
+        // initialise 0 1 counters
         counts = vector<vector<int>>();
-        completion = vector<bool>(dDim, false);
-
         for (int i = 0; i < dDim; ++i)
-            counts.emplace_back(vector<int>(2, 0));
+        {
+            int c0 = 0;
+            int c1 = 0;
+
+            string line = board->read(i);
+            for (int j = 0; j < dim; ++j)
+            {
+                c0 += line[j] == '0' * 1;
+                c1 += line[j] == '1' * 1;
+            }
+
+            counts.emplace_back(vector<int>{c0, c1});
+        }
+
+        // initialise line completion array
+        completion = vector<bool>(dDim, false);
     }
 
-    void run()
+    int run()
     {
-        for (int a = 0; a < 2; ++a)
+        int iterations = -1;
+        while (true)
         {
+            iterations++;
+            // handle different orientations
+            for (int rotationBool = 0; rotationBool < 2; ++rotationBool)
+            {
+                string boardString = board->read();
+                if (rotationBool)
+                    boardString = board->readRotated();
+
+                // rule enforcer
+                enforcePatternRules(boardString, rotationBool);
+
+                // exit when complete
+                if (boardComplete)
+                    return iterations;
+            }
+
             // enforce rules for each line
             for (int line = 0; line < dDim; ++line)
             {
                 // read current line
                 string lRead = board->read(line);
-
-                // enforce pattern base rules
-                if (!completion[line])
-                    for (int actionIndex = 0; actionIndex < 6; ++actionIndex)
-                    {
-                        pair<regex, int> pattern = PATTERN_REGEX_PAIRS[actionIndex];
-                        vector<int> positions;
-                        sregex_iterator itr = sregex_iterator(lRead.begin(), lRead.end(), pattern.first);
-                        for (; itr != sregex_iterator(); ++itr)
-                            setCell(line2index(line, (*itr).position(0) + pattern.second), actionIndex % 2);
-
-                        if (completion[line])
-                            break;
-                    }
 
                 // enforce half filled rule
                 if (!completion[line])
@@ -132,12 +200,15 @@ public:
                     // check of the line is half filled with 0s or 1s
                     int c0 = counts[line][0] == hDim;
                     int c1 = counts[line][1] == hDim;
-
                     // fill remaining with the other type of value of half is reached for one
                     if (c0 != c1)
                         for (int index = 0; index < dim; ++index)
                             setCell(line2index(line, index), c0);
                 }
+
+                // exit when complete
+                if (boardComplete)
+                    return iterations;
 
                 // enforce duplication prevention rule
                 if (!completion[line] && counts[line][0] == hDim - 1 && counts[line][1] == hDim - 1)
@@ -182,6 +253,10 @@ public:
                         for (int emptyPos : empties)
                             setCell(line2index(line, emptyPos), target[emptyPos] == '0');
                 }
+
+                // exit when complete
+                if (boardComplete)
+                    return iterations;
             }
         }
     }

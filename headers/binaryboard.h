@@ -23,7 +23,7 @@ public:
      *
      * @return board dimension
      */
-    int getDim() const
+    int getDim()
     {
         return dim;
     }
@@ -35,7 +35,7 @@ public:
      * @param col col index relative to board
      * @return indexed character
      */
-    char read(int row, int col) const
+    char read(int row, int col)
     {
         return board[row * dim + col];
     }
@@ -46,7 +46,7 @@ public:
      * @param line line index [0 - dim * 2)
      * @return line string
      */
-    string read(int line) const
+    string read(int line)
     {
         if (line / dim)
         {
@@ -67,9 +67,24 @@ public:
      *
      * @return complete board string
      */
-    string read() const
+    string read()
     {
         return board;
+    }
+
+    /**
+     * @brief Read the entire board string column by row
+     *
+     * @return complete rotated board string
+     */
+    string readRotated()
+    {
+        string rBoard = string(dim * dim, '-');
+        for (int i = 0; i < dim; ++i)
+            for (int j = 0; j < dim; ++j)
+                rBoard[j * dim + i] = board[i * dim + j];
+
+        return rBoard;
     }
 
     /**

@@ -66,10 +66,10 @@ int main()
     Solver solver = Solver(&game);
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    solver.run();
+    int iterations = solver.run();
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     game.print();
 
     // print running time
-    cout << "Solved in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << endl;
+    cout << "Solved in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs] | Iterations: " << iterations << endl;
 }
