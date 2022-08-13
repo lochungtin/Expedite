@@ -1,11 +1,19 @@
+#include "game.h"
+#include "../headers/binaryboard.h"
+
 class Solver
 {
 private:
-    Game game;
+    Game *game;
+    BinaryBoard *board;
 
 public:
-    Solver(Game gameIn)
+    Solver(Game *game) : game(game)
     {
-        game = gameIn;
+        board = game->getBoard();
     }
-}
+
+    void run()
+    {
+    }
+};
