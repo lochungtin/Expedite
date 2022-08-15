@@ -7,7 +7,9 @@
 
 using std::pair;
 using std::regex;
+using std::regex_match;
 using std::sregex_iterator;
+using std::to_string;
 using std::vector;
 
 #include <iostream>
@@ -33,9 +35,16 @@ private:
     Game *game;
     BinaryBoard *board;
 
+    // dimension variables
     int dim;
+    int lines;
+
+    // constraint variables
     vector<vector<Constraint>> constraints;
-    vector<regex> regexes;
+    vector<regex> regexes = vector<regex>();
+
+    // completion variables
+    vector<bool> completion;
 
     // ===== auxiliary functions =====
     /**
@@ -71,6 +80,33 @@ private:
     }
 
     /**
+     * @brief Create a regex for the line of constraints
+     *
+     * @param constraints   line constraints
+     * @param vectorSize    size of line constraints
+     * @return corresponding regex
+     */
+    regex createConstraintRegex(vector<int> *constraints, int vectorSize)
+    {
+        // start with any number of 0s
+        string builder = "[0-]*";
+
+        // iterate over the constraints integer values
+        for (int i = 0; i < vectorSize; ++i)
+        {
+            // add 1{n} for n number of 1s
+            builder += "1{" + to_string(constraints->at(i)) + "}";
+
+            // if not the last constraint, add 0+ for 1 or more 0s tailing the constraint
+            if (i < vectorSize - 1)
+                builder += "[0-]+";
+        }
+
+        // add final 0* for any number of 0s tailing the line
+        return regex(builder + "[0-]*");
+    }
+
+    /**
      * @brief Mark all cells that are the certain to have the value 1 in the given constraint
      *
      * @param constraint constraint to be checked
@@ -96,17 +132,77 @@ private:
         return availableLength == constraint->length;
     }
 
-    bool checkComplete()
+    /**
+     * @brief Check if line completely satisfies constraints
+     *
+     * @param line      line string
+     * @param lineIndex line index
+     * @return true     - line constraints satisfied
+     * @return false    - line constraints not yet complete
+     */
+    bool checkComplete(string line, int lineIndex)
+    {
+        // skip checks if already complete
+        if (completion[lineIndex])
+            return true;
 
-        public : Solver(Game *game) : game(game)
+        // check if line is complete, return false is not complete
+        if (!regex_match(line, regexes[lineIndex]))
+            return false;
+
+        // fill all remaining cells with 0
+        for (int i = 0; i < dim; ++i)
+            board->setCellByLine(lineIndex, i, false);
+
+        return true;
+    }
+
+public:
+    Solver(Game *game) : game(game)
     {
         // set board pointer
         board = game->getBoard();
 
         // store dimension
         dim = board->getDim();
+        lines = dim * 2;
 
-        constraints = vector<vector<Constraint>>(dim * 2, vector<Constraint>());
+        // initialise constraint array
+        constraints = vector<vector<Constraint>>(lines, vector<Constraint>());
+
+        // initialise completion array
+        completion = vector<bool>(lines, false);
+
+        // ===== INITIAL PREPARATION CODE =====
+        // analyse constraints, map int to Constraint struct, create regex checker for constraint
+        vector<vector<int>> *rows = game->getRowConstrinats();
+        for (int i = 0; i < rows->size(); ++i)
+        {
+            vector<int> *rowCon = &rows->at(i);
+            int rowLength = rowCon->size();
+
+            // create line regex
+            regexes.emplace_back(createConstraintRegex(rowCon, rowLength));
+
+            // create individual constraint structs
+            for (int j = 0; j < rowLength; ++j)
+                constraints[i].emplace_back(createConstraintStruct(rowCon, rowLength, j, i));
+        }
+
+        vector<vector<int>> *cols = game->getColConstrinats();
+        for (int i = 0; i < cols->size(); ++i)
+        {
+            vector<int> *colCon = &cols->at(i);
+            int colLength = colCon->size();
+
+            // create line regex
+            regexes.emplace_back(createConstraintRegex(colCon, colLength));
+
+            // create individual constraint structs
+            int lineIndex = dim + i;
+            for (int j = 0; j < colLength; ++j)
+                constraints[lineIndex].emplace_back(createConstraintStruct(colCon, colLength, j, lineIndex));
+        }
     }
 
     /**
@@ -116,34 +212,26 @@ private:
      */
     int run()
     {
-        // analyse constraints, map int to Constraint struct, create regex checker for constraint
-        vector<vector<int>> *rows = game->getRowConstrinats();
-        for (int i = 0; i < rows->size(); ++i)
-        {
-            vector<int> *rowCon = &rows->at(i);
-            int rowLength = rowCon->size();
-
-            for (int j = 0; j < rowLength; ++j)
-                constraints[i].emplace_back(createConstraintStruct(rowCon, rowLength, j, i));
-        }
-
-        vector<vector<int>> *cols = game->getColConstrinats();
-        for (int i = 0; i < cols->size(); ++i)
-        {
-            int lineIndex = dim + i;
-
-            vector<int> *colCon = &cols->at(i);
-            int colLength = colCon->size();
-
-            for (int j = 0; j < colLength; ++j)
-                constraints[lineIndex].emplace_back(createConstraintStruct(colCon, colLength, j, lineIndex));
-        }
-
         int iterations = 0;
 
-        for (auto lineConstraint : constraints)
-            for (auto constraint : lineConstraint)
-                constraint.complete = markCertain(&constraint);
+        for (int i = 0; i < lines; ++i)
+        {
+            if (completion[i])
+                continue;
+
+            bool allCompleted = true;
+            for (auto constraint : constraints[i])
+            {
+                constraint.complete = markCertain1(&constraint);
+                allCompleted *= constraint.complete;
+            }
+
+            if (allCompleted)
+                completion[i] = true;
+        }
+
+        for (int i = 0; i < lines; ++i)
+            completion[i] = checkComplete(board->read(i), i);
 
         return iterations;
     }

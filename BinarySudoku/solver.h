@@ -154,15 +154,8 @@ public:
 
         // initialise line completion array
         completion = vector<bool>(dDim, false);
-    }
 
-    /**
-     * @brief Run solver on board
-     *
-     * @return iterations taken to solve
-     */
-    int run()
-    {
+        // ===== INITIAL PREPARATION CODE =====
         // update counts with preset values
         for (int line = 0; line < dDim; ++line)
         {
@@ -173,8 +166,15 @@ public:
                 counts[line][1] += lRead[j] == '1' * 1;
             }
         }
+    }
 
-        // start solver algorithm
+    /**
+     * @brief Run solver on board
+     *
+     * @return iterations taken to solve
+     */
+    int run()
+    {
         int iterations = -1;
         while (true)
         {
