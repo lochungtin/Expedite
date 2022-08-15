@@ -13,9 +13,11 @@
 using std::cout;
 using std::dec;
 using std::endl;
+using std::getline;
 using std::hex;
 using std::map;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 class Game
@@ -79,6 +81,26 @@ public:
     }
 
     /**
+     * @brief Get the row constrinats
+     *
+     * @return pointer to constraint array
+     */
+    vector<vector<int>> *getRowConstrinats()
+    {
+        return &rowCon;
+    }
+
+    /**
+     * @brief Get the column constrinats
+     *
+     * @return pointer to constraint array
+     */
+    vector<vector<int>> *getColConstrinats()
+    {
+        return &colCon;
+    }
+
+    /**
      * @brief Prints game board with constraint information
      */
     void print()
@@ -111,7 +133,13 @@ public:
         }
 
         // get grid data
-        string printData = printBoard(board, map<char, string>{{'-', " "}, {'0', "░"}, {'1', "▓"}}, false);
+        stringstream ss(printBoard(board, map<char, string>{{'-', " "}, {'0', "░"}, {'1', "▓"}}, false));
+        string to;
+        vector<string> printData = vector<string>();
+
+        while (getline(ss, to, '\n'))
+            if (to[0] == '|')
+                printData.emplace_back(to.substr(1));
 
         int rowLength = dim * 4 + 2;
         for (int i = 0; i < dim; ++i)
@@ -128,10 +156,7 @@ public:
             }
 
             // print grid row data using substrings
-            int gridStart = (i * 2 + 1) * rowLength + 1;
-            string gridString = printData.substr(gridStart, rowLength - 2);
-
-            cout << "║" + gridString + "\n" + lRow + "\n";
+            cout << "║" + printData[i] + "\n" + lRow + "\n";
         }
 
         // change cout back to dec mode and flush
