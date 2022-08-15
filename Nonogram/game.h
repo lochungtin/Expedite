@@ -1,301 +1,166 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <iomanip>
 #include <iostream>
-#include <regex>
+#include <map>
 #include <string>
-#include <utility>
 #include <vector>
 
-#include "board.h"
+#include "../binaryboard.h"
+#include "../printer.h"
 
 using std::cout;
+using std::dec;
 using std::endl;
-using std::pair;
-using std::regex;
-using std::regex_match;
+using std::getline;
+using std::hex;
+using std::map;
 using std::string;
-using std::to_string;
+using std::stringstream;
 using std::vector;
-
-struct Constraint
-{
-    int line;
-    int index;
-    int length;
-    // range [rMin, rMax)
-    int rMin = 0;
-    int rMax = 0;
-    bool complete = false;
-};
-
-struct Section
-{
-    int start;
-    int length = 0;
-    int link;
-};
 
 class Game
 {
 private:
-    // dimensions
-    int dimSize;
-    int lines;
-
-    // data
-    Board board;
+    int dim;
+    BinaryBoard board;
 
     // constraints
     int maxConstraintNum = 0;
-
-    vector<int> constraintSum;
-    vector<vector<Constraint>> constraintsVec;
-    vector<regex> constraintsRegexLoose;
-    vector<regex> constraintsRegexAbs;
-
-    // completion
-    vector<bool> completion;
-
-    // ===== auxiliary functions =====
-    // get minimum space required for constraints
-    int getMinSpace(vector<Constraint> *constraints, int start, int end)
-    {
-        int sum = 0;
-        for (int i = start; i < end; ++i)
-            sum += (constraints->at(i).length + 1);
-
-        return sum;
-    }
-
-    // fill in certain cells by constraint range
-    void fillCertain(int line)
-    {
-        int size = constraintsVec[line].size();
-        vector<Constraint> *constraint = &constraintsVec[line];
-
-        for (int index = 0; index < size; ++index)
-        {
-            Constraint c = constraint->at(index);
-            int start = c.rMax - c.length;
-            int end = c.rMin + c.length;
-
-            for (int i = start; i < end; ++i)
-                board.setCellByLine(line, i, true);
-
-            if (end - start == c.length)
-                c.complete = true;
-        }
-    }
-
-    // analyse line partitions
-    void analysePartitions(string target, vector<Section> *marked, vector<Section> *empty)
-    {
-        Section markedSection;
-        Section emptySection;
-
-        int emptyCount = 0;
-
-        for (int index = 0; index < dimSize; ++index)
-        {
-            char ch = target[index];
-
-            if (ch == '1')
-            {
-                if (markedSection.length == 0)
-                    markedSection.start = index;
-                markedSection.length++;
-            }
-            else if (markedSection.length > 0)
-            {
-                markedSection.link = emptyCount;
-                marked->emplace_back(markedSection);
-                markedSection = Section();
-            }
-
-            if (ch != '0')
-            {
-                if (emptySection.length == 0)
-                    emptySection.start = index;
-                emptySection.length++;
-            }
-            else if (emptySection.length > 0)
-            {
-                empty->emplace_back(emptySection);
-                emptySection = Section();
-                emptyCount++;
-            }
-        }
-        if (markedSection.length > 0)
-            marked->emplace_back(markedSection);
-
-        if (emptySection.length > 0)
-            empty->emplace_back(emptySection);
-    }
-
-    // check if line is complete
-    bool isComplete(int line, bool checkingOverride = false, bool requireFill = true)
-    {
-        if (completion[line])
-            return true;
-
-        string target = board.read(line);
-        if (checkingOverride || regex_match(target, constraintsRegexAbs[line]))
-        {
-            if (requireFill)
-                for (int i = 0; i < dimSize; ++i)
-                    board.setCellByLine(line, i, false);
-
-            completion[line] = true;
-            return true;
-        }
-
-        return false;
-    }
+    vector<vector<int>> rowCon;
+    vector<vector<int>> colCon;
 
 public:
-    Game() {}
-    Game(int dimIn)
+    Game(int dim) : dim(dim), board(dim)
     {
-        // initialise board
-        dimSize = dimIn;
-        lines = dimIn * 2;
-        board = Board(dimSize);
-
-        // initialise constraints data structures
-        constraintSum = vector<int>(lines, 0);
-
-        constraintsVec = vector<vector<Constraint>>(lines, vector<Constraint>());
-
-        regex DEF("x");
-        constraintsRegexLoose = vector<regex>(lines, DEF);
-        constraintsRegexAbs = vector<regex>(lines, DEF);
-
-        // initialise completion maintainers
-        completion = vector<bool>(lines, false);
+        rowCon = vector<vector<int>>(dim);
+        colCon = vector<vector<int>>(dim);
     }
 
-    // set constraints
-    void setRowConstraints(int index, vector<int> constraints)
+    /**
+     * @brief Set the row constraints array
+     *
+     * @param index         index of the row constraint
+     * @param constraints   constraint array
+     */
+    void setRowConstraints(int row, vector<int> constraints)
     {
+        rowCon[row] = constraints;
+
+        // update max constraint number
         int size = constraints.size();
-
-        vector<Constraint> lineConstraints = vector<Constraint>(size, Constraint());
-
-        string abs = "^[0|-]*";
-        string loose = "^[0|-]*";
-
-        for (int i = 0; i < size; ++i)
-        {
-            int len = constraints[i];
-
-            // create constraint struct
-            lineConstraints[i].line = index;
-            lineConstraints[i].index = i;
-            lineConstraints[i].length = len;
-
-            // create matching regex
-            constraintSum[index] += len;
-            abs += "1{" + to_string(len) + (i + 1 < size ? "}[0|-]+" : "}");
-            loose += "[1|";
-            loose += (size > 1 ? "0|" : "");
-            loose += "-]{" + to_string(len) + (i + 1 < size ? "}[0|-]+" : "}");
-        }
-
-        constraintsRegexAbs[index] = regex(abs + "[0|-]*$");
-        constraintsRegexLoose[index] = regex(loose + "[0|-]*$");
-
-        // maintain max constraint number
         if (size > maxConstraintNum)
             maxConstraintNum = size;
-
-        // maintain constraint vector
-        constraintsVec[index] = lineConstraints;
     }
 
+    /**
+     * @brief Set the column constraints array
+     *
+     * @param col           index of the column constraint
+     * @param constraints   constraint array
+     */
     void setColConstraints(int col, vector<int> constraints)
     {
-        setRowConstraints(col + dimSize, constraints);
+        colCon[col] = constraints;
+
+        // update max constraint number
+        int size = constraints.size();
+        if (size > maxConstraintNum)
+            maxConstraintNum = size;
     }
 
-    // solve board
-    void solve()
+    /**
+     * @brief Get the pointer to the Board object
+     *
+     * @return BinaryBoard pointer
+     */
+    BinaryBoard *getBoard()
     {
-        // maintain initial constraint range
-        for (int line = 0; line < lines; ++line)
-        {
-            int size = constraintsVec[line].size();
-            vector<Constraint> *constraint = &constraintsVec[line];
+        return &board;
+    }
 
-            for (int index = 0; index < size; ++index)
+    /**
+     * @brief Get the row constrinats
+     *
+     * @return pointer to constraint array
+     */
+    vector<vector<int>> *getRowConstrinats()
+    {
+        return &rowCon;
+    }
+
+    /**
+     * @brief Get the column constrinats
+     *
+     * @return pointer to constraint array
+     */
+    vector<vector<int>> *getColConstrinats()
+    {
+        return &colCon;
+    }
+
+    /**
+     * @brief Prints game board with constraint information
+     */
+    void print()
+    {
+        // generate separator custom rows
+        string lRow = createRowString(maxConstraintNum + dim);
+        string sRow = createRowString(maxConstraintNum);
+        sRow.pop_back();
+
+        // set cout to hex mode
+        cout << hex << lRow << "\n";
+
+        // print column constraints
+        for (int i = 0; i < maxConstraintNum; ++i)
+        {
+            // print fill for top left corner
+            for (int j = 0; j < maxConstraintNum; ++j)
+                cout << "|░░░";
+            for (int j = 0; j < dim; ++j)
             {
-                constraint->at(index).rMin = (getMinSpace(constraint, 0, index));
-                constraint->at(index).rMax = dimSize - getMinSpace(constraint, index + 1, size);
+                // printer padding control
+                int k = i - maxConstraintNum + colCon[j].size();
+                if (k >= 0)
+                    cout << "| " << colCon[j][k] << " ";
+                else
+                    cout << "|   ";
             }
+            // print separator row
+            cout << "|\n" + (i + 1 == maxConstraintNum ? (sRow + createRowString(dim, true)) : lRow) + "\n";
         }
 
-        for (int line = 0; line < lines; ++line)
-            fillCertain(line);
+        // get grid data
+        stringstream ss(printBoard(board, map<char, string>{{'-', " "}, {'0', "░"}, {'1', "▓"}}, false));
+        string to;
+        vector<string> printData = vector<string>();
 
-        for (int line = 0; line < lines; ++line)
-            isComplete(line);
+        while (getline(ss, to, '\n'))
+            if (to[0] == '|')
+                printData.emplace_back(to.substr(1));
 
-        for (int line = 0; line < lines; ++line)
+        int rowLength = dim * 4 + 2;
+        for (int i = 0; i < dim; ++i)
         {
-            if (completion[line])
-                continue;
-
-            string target = board.read(line);
-
-            vector<Section> markedSections;
-            vector<Section> emptySections;
-            analysePartitions(target, &markedSections, &emptySections);
-
-            int markedCount = markedSections.size();
-            int emptyCount = emptySections.size();
-
-            int constraintCount = constraintsVec[line].size();
-
-            if (markedCount == constraintCount)
-                for (int markedId = 0; markedId < markedCount; ++markedId)
-                {
-                    Section marked = markedSections[markedId];
-                    int required = constraintsVec[line][markedId].length;
-                    int exMin = marked.start + marked.length - required;
-                    int exMax = marked.start + required;
-
-                    Section empty = emptySections[marked.link];
-                    int eEnd = empty.start + empty.length;
-                    // if (eEnd - exMin > 0)
-                }
-            else if (markedCount < constraintCount)
+            // print row constraints
+            for (int j = 0; j < maxConstraintNum; ++j)
             {
+                // printer padding control
+                int k = j - maxConstraintNum + rowCon[i].size();
+                if (k >= 0)
+                    cout << "| " << rowCon[i][k] << " ";
+                else
+                    cout << "|   ";
             }
-            else
-            {
-            }
+
+            // print grid row data using substrings
+            cout << "║" + printData[i] + "\n" + lRow + "\n";
         }
-    }
 
-    // ===== getters for auxiliary helper functions =====
-    string getBoard()
-    {
-        return board.getBoardAsString();
-    }
-
-    int getDim()
-    {
-        return dimSize;
-    }
-
-    int getMaxConstraintNum()
-    {
-        return maxConstraintNum;
-    }
-
-    vector<vector<Constraint>> getConstraints()
-    {
-        return constraintsVec;
+        // change cout back to dec mode and flush
+        cout << dec << endl;
     }
 };
 
