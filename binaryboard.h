@@ -26,42 +26,30 @@ public:
     }
 
     /**
-     * @brief Read lines from board string separated by width
+     * @brief Set cell value indexed by row and column
      *
-     * @param line line index [0 - width * 2)
-     * @return line string
-     */
-    string readLine(int line)
-    {
-        if (line / dim)
-        {
-            int col = line % dim;
-
-            string rt = string(dim, ' ');
-            for (int i = 0; i < dim; ++i)
-                rt[i] = board[col + dim * i];
-
-            return rt;
-        }
-        else
-            return board.substr(line * dim, dim);
-    }
-
-    /**
-     * @brief Set cell value indexed by line and relative index to line
-     *
-     * @param line  line index
-     * @param index position index relative to line
+     * @param row   row index
+     * @param col   column index
      * @param mark  symbol (0 or 1)
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
-    bool setCellByLine(int line, int index, bool mark)
+    bool setCellByCoordinate(int row, int col, bool mark)
     {
-        if (line / dim)
-            return setCellByIndex(index * dim + (line % dim), mark);
-        else
-            return setCellByIndex(line * dim + index, mark);
+        return Board::setCellByCoordinate(row, col, (mark ? '1' : '0'));
+    }
+
+    /**
+     * @brief Set cell value indexed by absolute index
+     *
+     * @param index board string index
+     * @param mark  symbol (0 or 1)
+     * @return true     - cell set complete
+     * @return false    - cell already occupied
+     */
+    bool setCellByIndex(int index, bool mark)
+    {
+        return Board::setCellByIndex(index, (mark ? '1' : '0'));
     }
 };
 

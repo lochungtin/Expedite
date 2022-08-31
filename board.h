@@ -22,6 +22,7 @@ public:
         board = string(size, '-');
     }
 
+    // ===== GET Functions ======
     /**
      * @brief Get the width of the board
      *
@@ -40,6 +41,29 @@ public:
     int getHeight()
     {
         return height;
+    }
+
+    // ===== READ Functions =====
+    /**
+     * @brief Read lines from board string
+     *
+     * @param line line index
+     * @return line string
+     */
+    string readLine(int line)
+    {
+        if (line / width)
+        {
+            int col = line % width;
+
+            string rt = string(height, ' ');
+            for (int i = 0; i < height; ++i)
+                rt[i] = board[col + width * i];
+
+            return rt;
+        }
+        else
+            return board.substr(line * width, width);
     }
 
     /**
@@ -83,6 +107,7 @@ public:
         return rBoard;
     }
 
+    // ===== SET Functions =====
     /**
      * @brief Set cell value indexed by row and column
      *
@@ -92,9 +117,9 @@ public:
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
-    bool setCellByCoordinate(int row, int col, bool mark)
+    bool setCellByCoordinate(int row, int col, char val)
     {
-        return setCellByIndex(row * width + col, mark);
+        return setCellByIndex(row * width + col, val);
     }
 
     /**
@@ -105,12 +130,12 @@ public:
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
-    bool setCellByIndex(int index, bool mark)
+    bool setCellByIndex(int index, char val)
     {
         if (board[index] != '-')
             return false;
 
-        board[index] = (mark ? '1' : '0');
+        board[index] = val;
         return true;
     }
 };
