@@ -34,9 +34,11 @@ struct Constraint
  */
 struct Section
 {
-    Section(int start, int length) : start(start), length(length){};
-    int start;  // starting position
-    int length; // length of section
+    Section(int start, int length, int fPad) : start(start), length(length), fPad(fPad){};
+    int start;    // starting position
+    int length;   // length of section
+    int fPad;     // front padding
+    int bPad = 0; // back padding
 };
 
 class Solver
@@ -137,6 +139,9 @@ private:
         return availableLength == constraint->length;
     }
 
+    //============================================================================
+    // TOGGLE POINTER VALUES OVERLAP
+    //============================================================================
     void markCertain0(vector<Constraint> *constraints, int line)
     {
         vector<int> togglePoints = vector<int>();
@@ -145,9 +150,6 @@ private:
             togglePoints.emplace_back(constraints->at(i).start);
             togglePoints.emplace_back(constraints->at(i).end);
         }
-
-        for (int p : togglePoints)
-            cout << line << " " << p << endl;
 
         bool markerDown = true;
         int togglePointer = 0;
@@ -191,34 +193,41 @@ private:
     }
 
     /**
-     * @brief Analyse the given line and create Section structs based on marked cells
+     * @brief Analyse given line and split sections into marked and empty
      *
-     * @param line - line to analyse
-     * @return Sectino arry
+     * @param line      line to analyse
+     * @param marked    marked array
+     * @param empty     empty array
      */
     vector<Section> splitLineToSections(string line)
     {
-        vector<Section> marked = vector<Section>();
+        vector<Section> sections;
 
         int lengthCounter = 0;
+        int emptyCounter = 0;
+        int pointer = 0;
+
         for (int i = 0; i < dim; ++i)
         {
-            // increment counter
-            if (line[i] == '1')
-                lengthCounter++;
-            // create Section struct and reset counter
-            else if (lengthCounter > 0)
+            if (line[i] == '0' && emptyCounter > 0)
             {
-                marked.emplace_back(Section(i - lengthCounter, lengthCounter));
-                lengthCounter = 0;
+                sections[pointer++].bPad = emptyCounter;
+                emptyCounter = 0;
+            }
+            else if (line[i] == '-')
+            {
+                emptyCounter++;
+
+                if (lengthCounter > 0)
+                {
+                    marked->emplace_back(Section(dim - lengthCounter, lengthCounter));
+                }
             }
         }
 
-        // add last section if loop exited with counter > 0
+        // add last section if loop exited with counters > 0
         if (lengthCounter > 0)
-            marked.emplace_back(Section(dim - lengthCounter, lengthCounter));
-
-        return marked;
+            marked->emplace_back(Section(dim - lengthCounter, lengthCounter));
     }
 
 public:
@@ -278,60 +287,84 @@ public:
     {
         int iterations = 0;
 
-        // mark certain cells
-        for (int i = 0; i < lines; ++i)
+        for (; iterations < 1; ++iterations)
         {
-            if (completion[i])
-                continue;
-
-            // mark all cells that are certain to have value 1
-            for (auto constraint : constraints[i])
-                constraint.complete = markCertain1(&constraint);
-        }
-
-        // reduce possible range of constraints
-        for (int i = 0; i < lines; ++i)
-        {
-            string line = board->read(i);
-
-            // check for line completion
-            if (checkComplete(line, i))
+            // mark certain cells
+            for (int i = 0; i < lines; ++i)
             {
-                completion[i] = true;
-                continue;
+                if (completion[i])
+                    continue;
+
+                // mark all cells that are certain to have value 1
+                for (auto constraint : constraints[i])
+                    constraint.complete = markCertain1(&constraint);
             }
 
-            vector<Constraint> *lineConstraints = &constraints[i];
-
-            // analyse line by spliting marked cells into sections
-            vector<Section> marked = splitLineToSections(line);
-
-            int sectionSize = marked.size();
-            int constraintSize = lineConstraints->size();
-
-            // number of sections is EQUAL TO number of constraints
-            if (sectionSize > constraintSize)
+            // update line completion status
+            for (int i = 0; i < lines; ++i)
             {
-                // only 1 section present and only 1 constraint required
-                if (sectionSize == 1)
+                string line = board->read(i);
+
+                // check for line completion
+                if (checkComplete(line, i))
                 {
-                    // update constraint possible range
-                    int cLength = lineConstraints->at(0).length;
-                    lineConstraints->at(0).start = marked[0].start + marked[0].length - cLength - 1;
-                    lineConstraints->at(0).end = marked[0].start + cLength - 1;
+                    completion[i] = true;
+                    continue;
                 }
             }
-            // number of sections is MORE THAN number of constraints
-            else if (sectionSize > constraintSize)
-            {
-            }
-            // number of sections is LESS THAN number of constraints
-            else
-            {
-            }
 
-            // mark all cells that are certain with value 0
-            markCertain0(lineConstraints, i);
+            // reduce possible range of constraints
+            for (int i = 0; i < lines; ++i)
+            {
+                // skip reduction step if line is already complete
+                if (completion[i])
+                    continue;
+
+                string line = board->read(i);
+                vector<Constraint> *lineConstraints = &constraints[i];
+
+                // analyse line by spliting marked cells into sections
+                vector<Section> marked = splitLineToSections(line);
+
+                int sectionSize = marked.size();
+                int constraintSize = lineConstraints->size();
+
+                // number of sections is EQUAL TO number of constraints
+                if (sectionSize == constraintSize)
+                {
+                    // only 1 section present and only 1 constraint required
+                    if (sectionSize == 1)
+                    {
+                        // update constraint possible range
+                        int cLength = lineConstraints->at(0).length;
+                        lineConstraints->at(0).start = marked[0].start + marked[0].length - cLength;
+                        lineConstraints->at(0).end = marked[0].start + cLength;
+                        markCertain0(lineConstraints, i);
+                    }
+                    else
+                    {
+                        for (int j = 0; j < constraintSize; ++j)
+                        {
+                            cout << i << ": " << lineConstraints->at(j).start << " " << lineConstraints->at(j).end << " " << lineConstraints->at(j).length << endl;
+                        }
+
+                        for (int j = 0; j < sectionSize; ++j)
+                        {
+                            cout << i << ": " << marked[j].start << " " << marked[j].length << endl;
+                        }
+                    }
+                }
+                // number of sections is MORE THAN number of constraints
+                else if (sectionSize > constraintSize)
+                {
+                }
+                // number of sections is LESS THAN number of constraints
+                else
+                {
+                }
+
+                // mark all cells that are certain with value 0
+            }
         }
 
         return iterations;

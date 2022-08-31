@@ -86,7 +86,7 @@ private:
      */
     int line2index(int line, int index)
     {
-        if (line > dim)
+        if (line >= dim)
             return index * dim + (line % dim);
 
         return line * dim + index;
@@ -100,7 +100,7 @@ private:
      */
     int indexRotation(int index)
     {
-        return index % dim * dim + (index / dim);
+        return (dim - index % dim - 1) * dim + (index / dim);
     }
 
     /**
@@ -159,7 +159,7 @@ public:
         // update counts with preset values
         for (int line = 0; line < dDim; ++line)
         {
-            string lRead = board->read(line);
+            string lRead = board->readLine(line);
             for (int j = 0; j < dim; ++j)
             {
                 counts[line][0] += lRead[j] == '0' * 1;
@@ -198,7 +198,7 @@ public:
             for (int line = 0; line < dDim; ++line)
             {
                 // read current line
-                string lRead = board->read(line);
+                string lRead = board->readLine(line);
 
                 // enforce half filled rule
                 if (!completion[line])
@@ -206,6 +206,7 @@ public:
                     // check of the line is half filled with 0s or 1s
                     int c0 = counts[line][0] == hDim;
                     int c1 = counts[line][1] == hDim;
+
                     // fill remaining with the other type of value of half is reached for one
                     if (c0 != c1)
                         for (int index = 0; index < dim; ++index)
@@ -227,10 +228,10 @@ public:
                     for (int tLine = targetStartRange; tLine < targetStartRange + dim; ++tLine)
                     {
                         // skip line if not complete
-                        if (!completion[tLine] && tLine != line)
+                        if (!completion[tLine] || tLine == line)
                             continue;
 
-                        string tRead = board->read(tLine);
+                        string tRead = board->readLine(tLine);
 
                         // check if each set character of the two lines match
                         bool earlyExit = false;
@@ -265,5 +266,6 @@ public:
                     return iterations;
             }
         }
+        return iterations;
     }
 };

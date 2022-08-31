@@ -2,21 +2,18 @@
 #define BINARYBOARD_H
 
 #include <string>
+#include "board.h"
 
 using std::string;
 
-class BinaryBoard
+class BinaryBoard : public Board
 {
-private:
+protected:
     int dim;
-    string board = "";
 
 public:
     BinaryBoard() {}
-    BinaryBoard(int dim) : dim(dim)
-    {
-        board = string(dim * dim, '-');
-    }
+    BinaryBoard(int dim) : Board(dim, dim), dim(dim) {}
 
     /**
      * @brief Get the dimensions of the board
@@ -29,24 +26,12 @@ public:
     }
 
     /**
-     * @brief Read individual characters from board string
+     * @brief Read lines from board string separated by width
      *
-     * @param row row index relative to board
-     * @param col col index relative to board
-     * @return indexed character
-     */
-    char read(int row, int col)
-    {
-        return board[row * dim + col];
-    }
-
-    /**
-     * @brief Read lines from board string separated by dim length
-     *
-     * @param line line index [0 - dim * 2)
+     * @param line line index [0 - width * 2)
      * @return line string
      */
-    string read(int line)
+    string readLine(int line)
     {
         if (line / dim)
         {
@@ -60,31 +45,6 @@ public:
         }
         else
             return board.substr(line * dim, dim);
-    }
-
-    /**
-     * @brief Read the entire board string
-     *
-     * @return complete board string
-     */
-    string read()
-    {
-        return board;
-    }
-
-    /**
-     * @brief Read the entire board string column by row
-     *
-     * @return complete rotated board string
-     */
-    string readRotated()
-    {
-        string rBoard = string(dim * dim, '-');
-        for (int i = 0; i < dim; ++i)
-            for (int j = 0; j < dim; ++j)
-                rBoard[j * dim + i] = board[i * dim + j];
-
-        return rBoard;
     }
 
     /**
@@ -102,37 +62,6 @@ public:
             return setCellByIndex(index * dim + (line % dim), mark);
         else
             return setCellByIndex(line * dim + index, mark);
-    }
-
-    /**
-     * @brief Set cell value indexed by row and column
-     *
-     * @param row   row index
-     * @param col   column index
-     * @param mark  symbol (0 or 1)
-     * @return true     - cell set complete
-     * @return false    - cell already occupied
-     */
-    bool setCellByCoordinate(int row, int col, bool mark)
-    {
-        return setCellByIndex(row * dim + col, mark);
-    }
-
-    /**
-     * @brief Set cell value indexed by absolute index
-     *
-     * @param index board string index
-     * @param mark  symbol (0 or 1)
-     * @return true     - cell set complete
-     * @return false    - cell already occupied
-     */
-    bool setCellByIndex(int index, bool mark)
-    {
-        if (board[index] != '-')
-            return false;
-
-        board[index] = (mark ? '1' : '0');
-        return true;
     }
 };
 

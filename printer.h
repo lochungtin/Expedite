@@ -35,21 +35,22 @@ string createRowString(int length, bool thick = false)
  * @param willPrintOverride enable print to terminal (default true)
  * @return string - formatted board string
  */
-string printBoard(BinaryBoard board, map<char, string> cMap, bool willPrintOverride = true)
+string printBoard(Board board, map<char, string> cMap, bool willPrintOverride = true)
 {
     string returnString = "";
 
-    int dim = board.getDim();
+    int width = board.getWidth();
+    int height = board.getHeight();
 
-    string rowString = createRowString(dim);
+    string rowString = createRowString(width);
     returnString.append(rowString).append("\n|");
 
-    for (int i = 0; i < dim; ++i)
+    for (int i = 0; i < height; ++i)
     {
-        for (int j = 0; j < dim; ++j)
-            returnString.append(" ").append(cMap[board.read(i, j)]).append(" |");
+        for (int j = 0; j < width; ++j)
+            returnString.append(" ").append(cMap[board.readCell(i, j)]).append(" |");
 
-        returnString.append("\n").append(rowString).append(i == dim - 1 ? "" : "\n|");
+        returnString.append("\n").append(rowString).append(i == height - 1 ? "" : "\n|");
     }
 
     if (willPrintOverride)
