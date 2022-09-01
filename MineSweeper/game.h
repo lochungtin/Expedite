@@ -23,14 +23,16 @@ private:
     int size;
 
     bool unseeded = true;
-    int mineCount;
     map<int, bool> mines;
+    int mineCount;
+    int flags = 0;
 
     Board board;
     Board databoard;
 
     vector<int> shiftMatrix = vector<int>(8);
     vector<int> ptlocs;
+    vector<bool> flagState;
 
     // ===== auxiliary functions =====
     /**
@@ -58,6 +60,8 @@ public:
     Game(int width, int height, int mineCount) : width(width), height(height), mineCount(mineCount)
     {
         size = width * height;
+
+        // create boards
         board = Board(width, height);
         databoard = Board(width, height, '0');
 
@@ -76,6 +80,9 @@ public:
         for (int i = 0; i < size; ++i)
             ptlocs[i] = i;
         random_shuffle(ptlocs.begin(), ptlocs.end());
+
+        // create flag array
+        flagState = vector<bool>(size, false);
     }
 
     bool select(int row, int col)
@@ -98,7 +105,6 @@ public:
 
                 // draw mine on databoard
                 databoard.setCellByIndex(ptlocs[index], '9', false);
-                cout << ptlocs[index] << endl;
             }
 
             // maintain mine counter
@@ -113,9 +119,63 @@ public:
         return false;
     }
 
+    bool flag(int click)
+    {
+        return flag(click / width, click % width);
+    }
+
     bool flag(int row, int col)
     {
+        int clickedIndex = row * width + col;
+
+        // unflag flagged cell
+        if (flagState[clickedIndex])
+        {
+            // update board
+            board.setCellByIndex(clickedIndex, '-', false);
+
+            // maintain flag state
+            flagState[clickedIndex] = false;
+            flags--;
+
+            // maintain mine flagged state
+            if (mines.count(clickedIndex))
+                mines[clickedIndex] = false;
+
+            return false;
+        }
+        // flag unflagged cell
+        else if (flags < mineCount)
+        {
+            // update board
+            board.setCellByIndex(clickedIndex, '|', false);
+
+            // maintain flag state
+            flagState[clickedIndex] = true;
+            flags++;
+
+            // maintain mine flagged state
+            if (mines.count(clickedIndex))
+                mines[clickedIndex] = true;
+
+            // check if all mines are flagged
+            bool complete = true;
+            for (const auto mine : mines)
+                complete *= mine.second;
+
+            return complete;
+        }
         return false;
+    }
+
+    /**
+     * @brief Get the pointer to the Board object
+     *
+     * @return Board pointer
+     */
+    Board *getBoard()
+    {
+        return &board;
     }
 
     /**
@@ -134,8 +194,10 @@ public:
             {'6', "6"},
             {'7', "7"},
             {'8', "8"},
-            {'9', "x"}};
-        printBoard(databoard, map);
+            {'9', "x"},
+            {'|', "|"},
+        };
+        printBoard(board, map);
     }
 };
 

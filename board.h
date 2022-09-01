@@ -122,9 +122,10 @@ public:
     /**
      * @brief Set cell value indexed by row and column
      *
-     * @param row   row index
-     * @param col   column index
-     * @param mark  symbol (0 or 1)
+     * @param row                   row index
+     * @param col                   column index
+     * @param val                   character value
+     * @param disableCharOverride   prevent override existing character
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
@@ -136,8 +137,9 @@ public:
     /**
      * @brief Set cell value indexed by absolute index
      *
-     * @param index board string index
-     * @param mark  symbol (0 or 1)
+     * @param index                 board string index
+     * @param val                   character value
+     * @param disableCharOverride   prevent override existing character
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
