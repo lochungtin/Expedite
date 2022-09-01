@@ -16,10 +16,10 @@ protected:
 
 public:
     Board() {}
-    Board(int width, int height) : width(width), height(height)
+    Board(int width, int height, char fill = '-') : width(width), height(height)
     {
         size = width * height;
-        board = string(size, '-');
+        board = string(size, fill);
     }
 
     // ===== GET Functions ======
@@ -79,6 +79,17 @@ public:
     }
 
     /**
+     * @brief Read individual characters from board string
+     *
+     * @param index index relative to board
+     * @return indexed character
+     */
+    char readCell(int index)
+    {
+        return board[index];
+    }
+
+    /**
      * @brief Read the entire board string
      *
      * @return complete board string
@@ -117,9 +128,9 @@ public:
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
-    bool setCellByCoordinate(int row, int col, char val)
+    bool setCellByCoordinate(int row, int col, char val, bool disableCharOverride = true)
     {
-        return setCellByIndex(row * width + col, val);
+        return setCellByIndex(row * width + col, val, disableCharOverride);
     }
 
     /**
@@ -130,9 +141,9 @@ public:
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
-    bool setCellByIndex(int index, char val)
+    bool setCellByIndex(int index, char val, bool disableCharOverride = true)
     {
-        if (board[index] != '-')
+        if (board[index] != '-' && disableCharOverride)
             return false;
 
         board[index] = val;

@@ -32,12 +32,34 @@ private:
     vector<int> shiftMatrix = vector<int>(8);
     vector<int> ptlocs;
 
+    // ===== auxiliary functions =====
+    /**
+     * @brief Get all valid neighbouring cell indices from given position
+     *
+     * @param row row index
+     * @param col column index
+     * @return all valid neighbour indices
+     */
+    vector<int> getNeighbours(int index)
+    {
+        vector<int> rt;
+
+        for (const int shift : shiftMatrix)
+        {
+            int shifted = index + shift;
+            if (shifted >= 0 && shifted < size)
+                rt.emplace_back(shifted);
+        }
+
+        return rt;
+    }
+
 public:
     Game(int width, int height, int mineCount) : width(width), height(height), mineCount(mineCount)
     {
         size = width * height;
         board = Board(width, height);
-        databoard = Board(width, height);
+        databoard = Board(width, height, '0');
 
         // create neighbour shift matrix
         shiftMatrix[0] = -width - 1;
@@ -70,8 +92,21 @@ public:
                 // shift to next cell if location is current click
                 if (clickedIndex == ptlocs[index++])
                     index++;
+
+                // save mine location
                 mines.emplace(ptlocs[index], false);
+
+                // draw mine on databoard
+                databoard.setCellByIndex(ptlocs[index], '9', false);
+                cout << ptlocs[index] << endl;
             }
+
+            // maintain mine counter
+            for (const auto mine : mines)
+                for (const int index : getNeighbours(mine.first))
+                    // by pass char hack if cell contains mine
+                    if (databoard.readCell(index) != '9')
+                        databoard.setCellByIndex(index, databoard.readCell(index) + 1, false);
         }
 
         // check for mine on selected cell
@@ -88,7 +123,19 @@ public:
      */
     void print()
     {
-        printBoard(board, map<char, string>{{'-', " "}, {'0', "░"}, {'1', "▓"}});
+        map<char, string> map = {
+            {'-', " "},
+            {'0', "0"},
+            {'1', "1"},
+            {'2', "2"},
+            {'3', "3"},
+            {'4', "4"},
+            {'5', "5"},
+            {'6', "6"},
+            {'7', "7"},
+            {'8', "8"},
+            {'9', "x"}};
+        printBoard(databoard, map);
     }
 };
 
