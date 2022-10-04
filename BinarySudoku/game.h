@@ -27,7 +27,7 @@ public:
      *
      * @param row   row index
      * @param col   column index
-     * @param mark  symbol (0 or 1)
+     * @param value symbol (0 or 1)
      * @return true     - cell set complete
      * @return false    - cell already occupied
      */
