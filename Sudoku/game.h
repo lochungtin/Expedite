@@ -8,14 +8,29 @@
 #include "../board.h"
 #include "../printer.h"
 
+using std::cout;
+using std::endl;
+using std::string;
 using std::to_string;
 
 class Game
 {
 private:
-    Board board;
+    Board board = Board(9, 9);
 
 public:
+    /**
+     * @brief Set the board row with string
+     *
+     * @param row       row index
+     * @param rowString row string
+     */
+    void setRowWithString(int row, string rowString)
+    {
+        for (int i = 0; i < 9; ++i)
+            board.setCellByCoordinate(row, i, rowString[i]);
+    }
+
     /**
      * @brief Set cell value indexed by row and column to board object
      *
@@ -27,7 +42,7 @@ public:
      */
     bool setCell(int row, int col, int value)
     {
-        return board.setCellByCoordinate(row, col, value);
+        return board.setCellByCoordinate(row, col, value + 48);
     }
 
     /**
@@ -46,10 +61,10 @@ public:
     void print()
     {
         map<char, string> cmap = {{'-', " "}};
-        for (int i = 0; i < 10; ++i)
+        for (int i = 1; i < 10; ++i)
         {
-            string s = to_string(i);
-            cmap.insert({s[0], s});
+            string str = to_string(i);
+            cmap.insert({str[0], str});
         }
         printBoard(board, cmap);
     }

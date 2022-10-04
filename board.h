@@ -22,6 +22,13 @@ public:
         board = string(size, fill);
     }
 
+    Board duplicate()
+    {
+        Board newBoard = Board(width, height);
+        newBoard.board = board;
+        return newBoard;
+    }
+
     // ===== GET Functions ======
     /**
      * @brief Get the width of the board
