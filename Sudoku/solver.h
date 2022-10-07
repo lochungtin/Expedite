@@ -15,36 +15,6 @@ private:
     Game *game;
     stack<pair<Board, MetaState>> states;
 
-    void analyseMetaState()
-    {
-        Board *topBoard = &states.top().first;
-        MetaState *topMetaState = &states.top().second;
-
-        for (int i = 0; i < 9; ++i)
-            for (int j = 0; j < 9; ++j)
-            {
-                char ch = topBoard->readCell(i * 9 + j);
-                if (ch != '-')
-                {
-                    topMetaState->set[i][j] = true;
-
-                    int val = ch - '1';
-
-                    for (int h = 0; h < 9; ++h)
-                        if (h != i)
-                            topMetaState->possibles[i][h][val] = false;
-                }
-            }
-
-        for (int j = 0; j < 9; ++j)
-        {
-            for (int k = 0; k < 9; ++k)
-                cout << topMetaState->possibles[5][j][k] << " ";
-            cout << "\n";
-        }
-        cout << endl;
-    }
-
 public:
     Solver(Game *game) : game(game)
     {
@@ -53,7 +23,36 @@ public:
 
     int run()
     {
-        analyseMetaState();
-        return 0;
+        Board *board = &states.top().first;
+        MetaState *metaState = &states.top().second;
+
+        for (int i = 0; i < 9; ++i)
+            for (int j = 0; j < 9; ++j)
+            {
+                char ch = board->readCell(i * 9 + j);
+                if (ch != '-')
+                    metaState->boardSet(i, j, ch - '1');
+            }
+
+        int iterations = 0;
+        while (metaState->incomplete() && iterations < 20)
+        {
+            for (int i = 0; i < 9; ++i)
+                for (int j = 0; j < 9; ++j)
+                    if (!metaState->set[i][j])
+                    {
+                        vector<int> possibles = metaState->getPossibles(i, j);
+                        if (possibles.size() == 1)
+                        {
+                            game->setCell(i, j, possibles[0]);
+                            metaState->boardSet(i, j, possibles[0] - 1);
+                        }
+                    }
+
+            // metaState->listIncomplete();
+            // game->print();
+            iterations++;
+        }
+        return iterations;
     }
 };
