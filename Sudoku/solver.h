@@ -26,31 +26,26 @@ public:
         Board *board = &states.top().first;
         MetaState *metaState = &states.top().second;
 
-        for (int i = 0; i < 9; ++i)
-            for (int j = 0; j < 9; ++j)
-            {
-                char ch = board->readCell(i * 9 + j);
-                if (ch != '-')
-                    metaState->boardSet(i, j, ch - '1');
-            }
+        for (int i = 0; i < 81; ++i)
+        {
+            char ch = board->readCell(i);
+            if (ch != '-')
+                metaState->setCell(i, ch - '1');
+        }
+        // metaState->listIncomplete();
 
         int iterations = 0;
-        while (metaState->incomplete() && iterations < 20)
+        while (metaState->incomplete() && iterations < 5)
         {
-            for (int i = 0; i < 9; ++i)
-                for (int j = 0; j < 9; ++j)
-                    if (!metaState->set[i][j])
+            // single possiblity setting
+            for (int i = 0; i < 81; ++i)
+                if (!metaState->set[i])
+                    if (metaState->getPossibleSize(i) == 1)
                     {
-                        vector<int> possibles = metaState->getPossibles(i, j);
-                        if (possibles.size() == 1)
-                        {
-                            game->setCell(i, j, possibles[0]);
-                            metaState->boardSet(i, j, possibles[0] - 1);
-                        }
+                        int index = metaState->getSingle(i);
+                        game->setCell(i / 9, i % 9, index + 1);
+                        metaState->setCell(i, index);
                     }
-
-            // metaState->listIncomplete();
-            // game->print();
             iterations++;
         }
         return iterations;

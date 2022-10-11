@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+#include "data.h"
+
 using std::cout;
 using std::endl;
 using std::vector;
@@ -8,94 +10,128 @@ using std::vector;
 class MetaState
 {
 public:
-    bool possibles[9][9][9];
-    bool set[9][9];
+    bool set[81];
+    bool possibles[81][9];
 
     MetaState()
     {
-        for (int i = 0; i < 9; ++i)
+        for (int i = 0; i < 81; ++i)
+        {
+            set[i] = false;
+
             for (int j = 0; j < 9; ++j)
+                possibles[i][j] = true;
+        }
+    }
+
+    void setCell(int index, int value)
+    {
+        set[index] = true;
+
+        removeRowPossibles(index, value);
+        removeColPossibles(index, value);
+        removeSubPossibles(index, value);
+
+        for (int i = 0; i < 9; ++i)
+            possibles[index][i] = (i == index);
+    }
+
+    void removeRowPossibles(int index, int value)
+    {
+        int shift = (index / 9) * 9;
+        for (int i = 0; i < 9; ++i)
+        {
+            int position = shift + i;
+            if (!set[position] && position != index)
+                possibles[position][value] = false;
+        }
+    }
+
+    void removeColPossibles(int index, int value)
+    {
+        int shift = index % 9;
+        for (int i = 0; i < 81; i += 9)
+        {
+            int position = shift + i;
+            if (!set[position] && position != index)
+                possibles[position][value] = false;
+        }
+    }
+
+    void removeSubPossibles(int index, int value)
+    {
+        int subgrid = index2subgrid[index];
+        int subGridRow = (subgrid / 3) * 3;
+        int subGridCol = (subgrid % 3) * 3;
+
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
             {
-                set[i][j] = false;
-                for (int k = 0; k < 9; ++k)
-                    possibles[i][j][k] = true;
+                int position = (subGridRow + i) * 9 + subGridCol + j;
+                if (!set[position] && position != index)
+                    possibles[position][value] = false;
             }
     }
 
-    void boardSet(int row, int col, int index)
+    /**
+     * @brief Get number of remaining possible values of cell
+     *
+     * @param index cell index
+     * @return int  number of remaining possible values
+     */
+    int getPossibleSize(int index)
     {
-        set[row][col] = true;
-
-        int subRowOffset = (row / 3) * 3;
-        int subColOffset = (col / 3) * 3;
-
+        int sum = 0;
         for (int i = 0; i < 9; ++i)
-        {
-            if (col != i && !set[row][i])
-                possibles[row][i][index] = false;
-            if (row != i && !set[i][col])
-                possibles[i][col][index] = false;
+            sum += possibles[index][i];
 
-            int subRow = i / 3 + subRowOffset;
-            int subCol = i % 3 + subColOffset;
-
-            if (subRow != row && subCol != col && !set[subRow][subCol])
-                possibles[subRow][subCol][index] = false;
-        }
-
-        for (int i = 0; i < 9; ++i)
-            possibles[row][col][i] = (i == index);
+        return sum;
     }
 
-    vector<int> getPossibles(int row, int col)
+    /**
+     * @brief Get the remaining single possible value of the cell
+     *
+     * @param index cell index
+     * @return int  value
+     */
+    int getSingle(int index)
     {
-        vector<int> rt;
         for (int i = 0; i < 9; ++i)
-            if (possibles[row][col][i])
-                rt.emplace_back(i + 1);
+            if (possibles[index][i])
+                return i;
 
-        return rt;
+        return 0;
     }
 
+    /**
+     * @brief Check if board is incomplete
+     *
+     * @return true
+     * @return false
+     */
     bool incomplete()
     {
-        for (int i = 0; i < 9; ++i)
-            for (int j = 0; j < 9; ++j)
-                if (!set[i][j])
-                    return true;
+        for (int i = 0; i < 81; ++i)
+            if (!set[i])
+                return true;
 
         return false;
     }
 
-    void listAll()
+    /**
+     * @brief List all possible values for incomplete cells
+     *
+     */
+    void listIncomplete()
     {
-        for (int i = 0; i < 9; ++i)
-            for (int j = 0; j < 9; ++j)
+        for (int i = 0; i < 81; ++i)
+            if (!set[i])
             {
-                if (set[i][j])
-                    cout << "[x] - ";
-                else
-                    cout << "[ ] - ";
-
-                cout << "(" << i << ", " << j << ") - [ ";
-                for (int k = 0; k < 9; ++k)
-                    cout << possibles[i][j][k] << " ";
+                cout << "(" << i << ") - [ ";
+                for (int j = 0; j < 9; ++j)
+                    cout << possibles[i][j] << " ";
 
                 cout << "]\n";
             }
-    }
-
-    void listIncomplete()
-    {
-        for (int i = 0; i < 9; ++i)
-            for (int j = 0; j < 9; ++j)
-                if (!set[i][j])
-                {
-                    cout << "(" << i << ", " << j << ") - [ ";
-                    for (int k = 0; k < 9; ++k)
-                        cout << possibles[i][j][k] << " ";
-
-                    cout << "]\n";
-                }
     }
 };

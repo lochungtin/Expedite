@@ -23,6 +23,7 @@ int main()
         game.setRowWithString(7, "-----3---");
         game.setRowWithString(8, "-61-452-9");
     }
+
     game.print();
 
     // solve game;
