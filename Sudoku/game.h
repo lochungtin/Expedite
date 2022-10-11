@@ -32,6 +32,19 @@ public:
     }
 
     /**
+     * @brief Set cell value by index to board object
+     *
+     * @param index cell index
+     * @param value value to set
+     * @return true     - cell set complete
+     * @return false    - cell already occupied
+     */
+    bool setCell(int index, int value)
+    {
+        return board.setCellByIndex(index, value + 49);
+    }
+
+    /**
      * @brief Set cell value indexed by row and column to board object
      *
      * @param row   row index
@@ -42,7 +55,7 @@ public:
      */
     bool setCell(int row, int col, int value)
     {
-        return board.setCellByCoordinate(row, col, value + 48);
+        return board.setCellByCoordinate(row, col, value + 49);
     }
 
     /**

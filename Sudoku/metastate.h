@@ -24,18 +24,33 @@ public:
         }
     }
 
+    /**
+     * @brief Set the cell with value and maintain possibles
+     *
+     * @param index cell index
+     * @param value value to set
+     */
     void setCell(int index, int value)
     {
+        // set cell as true
         set[index] = true;
 
+        // remove possibles for neighbouring cells
         removeRowPossibles(index, value);
         removeColPossibles(index, value);
         removeSubPossibles(index, value);
 
+        // remove possibles for set cell
         for (int i = 0; i < 9; ++i)
             possibles[index][i] = (i == index);
     }
 
+    /**
+     * @brief Set all instances of "value" to false for given row
+     *
+     * @param index cell index to omit
+     * @param value value to set as false
+     */
     void removeRowPossibles(int index, int value)
     {
         int shift = (index / 9) * 9;
@@ -47,6 +62,12 @@ public:
         }
     }
 
+    /**
+     * @brief Set all instances of "value" to false for given column
+     *
+     * @param index cell index to omit
+     * @param value value to set as false
+     */
     void removeColPossibles(int index, int value)
     {
         int shift = index % 9;
@@ -58,19 +79,21 @@ public:
         }
     }
 
+    /**
+     * @brief Set all instances of "value" to false for given subgrid
+     *
+     * @param index cell index to omit
+     * @param value value to set as false
+     */
     void removeSubPossibles(int index, int value)
     {
         int subgrid = index2subgrid[index];
-        int subGridRow = (subgrid / 3) * 3;
-        int subGridCol = (subgrid % 3) * 3;
-
-        for (int i = 0; i < 3; ++i)
-            for (int j = 0; j < 3; ++j)
-            {
-                int position = (subGridRow + i) * 9 + subGridCol + j;
-                if (!set[position] && position != index)
-                    possibles[position][value] = false;
-            }
+        for (int i = 0; i < 9; ++i)
+        {
+            int position = subgrid2index[subgrid][i];
+            if (!set[position] && position != index)
+                possibles[position][value] = false;
+        }
     }
 
     /**
@@ -90,6 +113,7 @@ public:
 
     /**
      * @brief Get the remaining single possible value of the cell
+     * ONLY USE WHEN CERTAIN CELL HAS ONE REMAINIG VALUE LEFT
      *
      * @param index cell index
      * @return int  value
