@@ -50,9 +50,11 @@ private:
         // scanning
         for (int scan = 0; scan < 9; ++scan)
         {
+            // calculate sweep indices
             int rowIndex = row + scan;
             int colIndex = col + (scan * 9);
-            int subIndex = subgrid2index[index][scan];
+            int subIndex = subgrid2index(index, scan);
+
             for (int value = 0; value < 9; ++value)
             {
                 // update row single frequencies
@@ -78,30 +80,11 @@ private:
             // update row double pair frequencies
             if (metaState->getPossibleSize(rowIndex) == 2)
             {
-
             }
         }
 
         return sa;
     };
-
-    int possibles2signature(bool *possibles)
-    {
-        int shift = 1;
-        int signature = 0;
-        for (int i = 0; i < 9; ++i)
-        {
-            if (possibles[i])
-            {
-                signature += i * shift;
-                shift *= 10;
-            }
-        }
-
-        return signature;
-    }
-
-    // 3150
 
 public:
     Solver(Game *game) : game(game)
@@ -126,13 +109,26 @@ public:
         while (metaState->incomplete() && iterations < 20)
         {
             iterations++;
-            // single possiblity setting
+            for (int sweeper = 0; sweeper < 9; ++sweeper)
+            {
+                SweepAnalysis sa = frequencyAnalysis(sweeper, metaState);
+
+                // set cells to value with freq 1
+                for (int value = 0; value < 9; ++value)
+                {
+                    if (sa.rFT.singleFrequency[value] == 1)
+                        updateBoards(metaState, sa.rFT.singleLocation[value], value);
+                    if (sa.cFT.singleFrequency[value] == 1)
+                        updateBoards(metaState, sa.cFT.singleLocation[value], value);
+                    if (sa.sFT.singleFrequency[value] == 1)
+                        updateBoards(metaState, sa.sFT.singleLocation[value], value);
+                }
+            }
+
+            // set cells with only one possible value left
             for (int index = 0; index < 81; ++index)
                 if (!metaState->set[index] && metaState->getPossibleSize(index) == 1)
                     updateBoards(metaState, index, metaState->getSingle(index));
-
-            for (int sweeper = 0; sweeper < 9; ++sweeper)
-                SweepAnalysis sa = frequencyAnalysis(sweeper, metaState);
         }
 
         metaState->listIncomplete();

@@ -87,10 +87,10 @@ public:
      */
     void removeSubPossibles(int index, int value)
     {
-        int subgrid = index2subgrid[index];
+        int subgrid = index2subgrid(index);
         for (int i = 0; i < 9; ++i)
         {
-            int position = subgrid2index[subgrid][i];
+            int position = subgrid2index(subgrid, i);
             if (!set[position] && position != index)
                 possibles[position][value] = false;
         }

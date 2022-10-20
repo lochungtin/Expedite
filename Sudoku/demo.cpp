@@ -13,7 +13,7 @@ int main()
     Game game = Game();
 
     // load game board with preset cells
-    if (0)
+    if (1)
     { // mid
         game.setRowWithString(0, "185------");
         game.setRowWithString(1, "7----93-4");
