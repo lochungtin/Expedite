@@ -1,3 +1,4 @@
+#include <map>
 #include <stack>
 #include <utility>
 
@@ -8,6 +9,22 @@
 using std::pair;
 using std::stack;
 
+struct FrequencyTable
+{
+    int singleFrequency[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int singleLocation[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    map<int, int> doublePairFrequency;
+    map<int, int> doublePairLocation;
+};
+
+struct SweepAnalysis
+{
+    FrequencyTable rFT;
+    FrequencyTable cFT;
+    FrequencyTable sFT;
+};
+
 class Solver
 {
 private:
@@ -15,69 +32,76 @@ private:
     Game *game;
     stack<pair<Board, MetaState>> states;
 
-    void frequencyAnalysis(int index, MetaState *metaState)
+    void updateBoards(MetaState *metaState, int index, int value)
+    {
+        game->setCell(index, value);
+        metaState->setCell(index, value);
+    }
+
+    SweepAnalysis frequencyAnalysis(int index, MetaState *metaState)
     {
         // frequency table
-        int rFreq[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int cFreq[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int sFreq[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-        // position table
-        int rPos[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int cPos[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int sPos[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        SweepAnalysis sa;
 
         // absolute values
         int row = (index / 9) * 9;
         int col = index % 9;
 
         // scanning
-        for (int value = 0; value < 9; ++value)
-            for (int scan = 0; scan < 9; ++scan)
+        for (int scan = 0; scan < 9; ++scan)
+        {
+            int rowIndex = row + scan;
+            int colIndex = col + (scan * 9);
+            int subIndex = subgrid2index[index][scan];
+            for (int value = 0; value < 9; ++value)
             {
-                // update row frequencies
-                int rowIndex = row + scan;
+                // update row single frequencies
                 if (!metaState->set[rowIndex] && metaState->possibles[rowIndex][value])
                 {
-                    rPos[value] = rowIndex;
-                    rFreq[value]++;
+                    sa.rFT.singleLocation[value] = rowIndex;
+                    sa.rFT.singleFrequency[value]++;
                 }
-                // update sub frequencies
-                int colIndex = col + (scan * 9);
+                // update col single frequencies
                 if (!metaState->set[colIndex] && metaState->possibles[colIndex][value])
                 {
-                    cPos[value] = colIndex;
-                    cFreq[value]++;
+                    sa.cFT.singleLocation[value] = colIndex;
+                    sa.cFT.singleFrequency[value]++;
                 }
-                // update sub frequencies
-                int subIndex = subgrid2index[index][scan];
+                // update sub single frequencies
                 if (!metaState->set[subIndex] && metaState->possibles[subIndex][value])
                 {
-                    sPos[value] = subIndex;
-                    sFreq[value]++;
+                    sa.sFT.singleLocation[value] = subIndex;
+                    sa.sFT.singleFrequency[value]++;
                 }
             }
 
-        // set singles
-        for (int value = 0; value < 9; ++value)
-        {
-            if (rFreq[value] == 1)
+            // update row double pair frequencies
+            if (metaState->getPossibleSize(rowIndex) == 2)
             {
-                game->setCell(rPos[value], value);
-                metaState->setCell(rPos[value], value);
-            }
-            if (cFreq[value] == 1)
-            {
-                game->setCell(cPos[value], value);
-                metaState->setCell(cPos[value], value);
-            }
-            if (sFreq[value] == 1)
-            {
-                game->setCell(sPos[value], value);
-                metaState->setCell(sPos[value], value);
+
             }
         }
+
+        return sa;
     };
+
+    int possibles2signature(bool *possibles)
+    {
+        int shift = 1;
+        int signature = 0;
+        for (int i = 0; i < 9; ++i)
+        {
+            if (possibles[i])
+            {
+                signature += i * shift;
+                shift *= 10;
+            }
+        }
+
+        return signature;
+    }
+
+    // 3150
 
 public:
     Solver(Game *game) : game(game)
@@ -90,6 +114,7 @@ public:
         Board *board = &states.top().first;
         MetaState *metaState = &states.top().second;
 
+        // create meta state from board input
         for (int index = 0; index < 81; ++index)
         {
             char ch = board->readCell(index);
@@ -104,14 +129,10 @@ public:
             // single possiblity setting
             for (int index = 0; index < 81; ++index)
                 if (!metaState->set[index] && metaState->getPossibleSize(index) == 1)
-                {
-                    int value = metaState->getSingle(index);
-                    game->setCell(index, value);
-                    metaState->setCell(index, value);
-                }
+                    updateBoards(metaState, index, metaState->getSingle(index));
 
             for (int sweeper = 0; sweeper < 9; ++sweeper)
-                frequencyAnalysis(sweeper, metaState);
+                SweepAnalysis sa = frequencyAnalysis(sweeper, metaState);
         }
 
         metaState->listIncomplete();
