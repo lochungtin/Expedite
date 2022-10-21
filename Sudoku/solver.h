@@ -62,7 +62,7 @@ private:
             int colIndex = sweeper + (scan * 9);
             int subIndex = subgrid2index(sweeper, scan);
 
-            // update
+            // update single frequency data
             for (int value = 0; value < 9; ++value)
             {
                 if (!metaState->set[rowIndex] && metaState->possibles[rowIndex][value])
@@ -75,22 +75,11 @@ private:
 
             // update row double pair frequencies
             if (!metaState->set[rowIndex] && metaState->getPossibleSize(rowIndex) == 2)
-            {
-                // cout << scan << " r " << rowIndex << endl;
                 doubleFrequencyUpdate(metaState, &sa->rFT, rowIndex, scan);
-            }
-
             if (!metaState->set[colIndex] && metaState->getPossibleSize(colIndex) == 2)
-            {
-                // cout << scan << " c " << colIndex << endl;
                 doubleFrequencyUpdate(metaState, &sa->cFT, colIndex, scan);
-            }
-
             if (!metaState->set[subIndex] && metaState->getPossibleSize(subIndex) == 2)
-            {
-                // cout << scan << " s " << subIndex << endl;
                 doubleFrequencyUpdate(metaState, &sa->sFT, subIndex, scan);
-            }
         }
     };
 
@@ -132,6 +121,20 @@ private:
         ft->doubleFrequency[sign]++;
     }
 
+    /**
+     * @brief Remove possible values given double pair
+     *
+     * @param metaState metaState pointer
+     * @param index     board index
+     * @param p0        pair[0]
+     * @param p1        pair[1]
+     */
+    void removePossiblePair(MetaState *metaState, int index, int p0, int p1)
+    {
+        metaState->possibles[index][p0] = false;
+        metaState->possibles[index][p1] = false;
+    }
+
 public:
     Solver(Game *game) : game(game)
     {
@@ -170,66 +173,44 @@ public:
                 // prune possible values from cells with double pair rule
                 for (int sign = 0; sign < 36; ++sign)
                 {
+                    int pair = signature2pair(sign);
+                    int p0 = pair / 10;
+                    int p1 = pair % 10;
+
                     if (sa.rFT.doubleFrequency[sign] == 2)
                     {
-                        int location = sa.rFT.doubleLocation[sign];
-                        int l0 = location / 10;
-                        int l1 = location % 10;
-
-                        int pair = signature2pair(sign);
-                        int p0 = pair / 10;
-                        int p1 = pair % 10;
+                        int l0 = sa.rFT.doubleLocation[sign] / 10;
+                        int l1 = sa.rFT.doubleLocation[sign] % 10;
 
                         for (int index = 0; index < 9; ++index)
                         {
                             int rowIndex = sweeper * 9 + index;
                             if (!metaState->set[rowIndex] && index != l0 && index != l1)
-                            {
-                                metaState->possibles[rowIndex][p0] = false;
-                                metaState->possibles[rowIndex][p1] = false;
-                            }
+                                removePossiblePair(metaState, rowIndex, p0, p1);
                         }
                     }
-
                     if (sa.cFT.doubleFrequency[sign] == 2)
                     {
-                        int location = sa.cFT.doubleLocation[sign];
-                        int l0 = location / 10;
-                        int l1 = location % 10;
-
-                        int pair = signature2pair(sign);
-                        int p0 = pair / 10;
-                        int p1 = pair % 10;
+                        int l0 = sa.cFT.doubleLocation[sign] / 10;
+                        int l1 = sa.cFT.doubleLocation[sign] % 10;
 
                         for (int index = 0; index < 9; ++index)
                         {
                             int colIndex = sweeper + index * 9;
                             if (!metaState->set[colIndex] && index != l0 && index != l1)
-                            {
-                                metaState->possibles[colIndex][p0] = false;
-                                metaState->possibles[colIndex][p1] = false;
-                            }
+                                removePossiblePair(metaState, colIndex, p0, p1);
                         }
                     }
-
                     if (sa.sFT.doubleFrequency[sign] == 2)
                     {
-                        int location = sa.sFT.doubleLocation[sign];
-                        int l0 = location / 10;
-                        int l1 = location % 10;
-
-                        int pair = signature2pair(sign);
-                        int p0 = pair / 10;
-                        int p1 = pair % 10;
+                        int l0 = sa.sFT.doubleLocation[sign] / 10;
+                        int l1 = sa.sFT.doubleLocation[sign] % 10;
 
                         for (int index = 0; index < 9; ++index)
                         {
                             int subIndex = subgrid2index(sweeper, index);
                             if (!metaState->set[subIndex] && index != l0 && index != l1)
-                            {
-                                metaState->possibles[subIndex][p0] = false;
-                                metaState->possibles[subIndex][p1] = false;
-                            }
+                                removePossiblePair(metaState, subIndex, p0, p1);
                         }
                     }
                 }
