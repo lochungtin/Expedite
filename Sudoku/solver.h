@@ -23,6 +23,9 @@ struct SweepAnalysis
     FrequencyTable rFT;
     FrequencyTable cFT;
     FrequencyTable sFT;
+
+    int rSpan[9] = {4, 4, 4, 4, 4, 4, 4, 4, 4};
+    int cSpan[9] = {4, 4, 4, 4, 4, 4, 4, 4, 4};
 };
 
 class Solver
@@ -38,19 +41,22 @@ private:
      * @param metaState metaState pointer
      * @param index     board index
      * @param value     value to set
+     * @return true
      */
-    void updateBoard(MetaState *metaState, int index, int value)
+    bool updateBoard(MetaState *metaState, int index, int value)
     {
         game->setCell(index, value);
         metaState->setCell(index, value);
+
+        return true;
     }
 
     /**
      * @brief Perform frequency analysis on possible values on the metaState
      *
+     * @param sa        sweep analysis struct pointer
      * @param metaState metaState pointer
      * @param index     sweeper index
-     * @return SweepAnalysis (tuple of frequency tables)
      */
     void frequencyAnalysis(SweepAnalysis *sa, MetaState *metaState, int sweeper)
     {
@@ -71,6 +77,23 @@ private:
                     singleFrequencyUpdate(&sa->cFT, colIndex, value);
                 if (!metaState->set[subIndex] && metaState->possibles[subIndex][value])
                     singleFrequencyUpdate(&sa->sFT, subIndex, value);
+
+                // subgrid possible value row and column span analysis
+                if (!metaState->set[subIndex] && metaState->possibles[subIndex][value])
+                {
+                    int subRow = value / 3;
+                    int subCol = value % 3;
+
+                    if (sa->rSpan[value] == 4)
+                        sa->rSpan[value] = subRow;
+                    else if (sa->rSpan[value] != subRow)
+                        sa->rSpan[value] = 5;
+
+                    if (sa->cSpan[value] == 4)
+                        sa->cSpan[value] = subCol;
+                    else if (sa->cSpan[value] != subCol)
+                        sa->cSpan[value] = 5;
+                }
             }
 
             // update row double pair frequencies
@@ -129,7 +152,7 @@ private:
      * @param p0        pair[0]
      * @param p1        pair[1]
      */
-    void removePossiblePair(MetaState *metaState, int index, int p0, int p1)
+    bool removePossiblePair(MetaState *metaState, int index, int p0, int p1)
     {
         metaState->possibles[index][p0] = false;
         metaState->possibles[index][p1] = false;
@@ -159,16 +182,35 @@ public:
                 metaState->setCell(index, ch - '1');
         }
 
+        bool changed = true;
         int iterations = -1;
-        while (metaState->incomplete() && iterations < 20)
+        while (metaState->incomplete() && changed)
         {
             iterations++;
+            changed = false;
 
             // frequency analysis for possible value pruning
             for (int sweeper = 0; sweeper < 9; ++sweeper)
             {
                 SweepAnalysis sa;
                 frequencyAnalysis(&sa, metaState, sweeper);
+
+                // prune possible values from cells with subgrid single span rule
+                int rowOffset = (sweeper / 3) * 3;
+                int rowBound = ((sweeper / 3) + 1) * 3;
+                int colOffset = (sweeper % 3) * 3;
+                int rowBound = ((sweeper % 3) + 1) * 3;
+                for (int value = 0; value < 9; ++value)
+                {
+                    if (sa.rSpan[value] < 3)
+                    {
+                        int col = sa.rSpan[value] + colOffset;
+                    }
+
+                    if (sa.cSpan[value] < 3)
+                    {
+                    }
+                }
 
                 // prune possible values from cells with double pair rule
                 for (int sign = 0; sign < 36; ++sign)
@@ -218,22 +260,22 @@ public:
                 // set cells to value with freq 1
                 for (int value = 0; value < 9; ++value)
                 {
-                    if (sa.rFT.singleFrequency[value] == 1)
-                        updateBoard(metaState, sa.rFT.singleLocation[value], value);
-                    if (sa.cFT.singleFrequency[value] == 1)
-                        updateBoard(metaState, sa.cFT.singleLocation[value], value);
-                    if (sa.sFT.singleFrequency[value] == 1)
-                        updateBoard(metaState, sa.sFT.singleLocation[value], value);
+                    if (!metaState->set[sa.rFT.singleLocation[value]] && sa.rFT.singleFrequency[value] == 1)
+                        changed = updateBoard(metaState, sa.rFT.singleLocation[value], value);
+                    if (!metaState->set[sa.cFT.singleLocation[value]] && sa.cFT.singleFrequency[value] == 1)
+                        changed = updateBoard(metaState, sa.cFT.singleLocation[value], value);
+                    if (!metaState->set[sa.sFT.singleLocation[value]] && sa.sFT.singleFrequency[value] == 1)
+                        changed = updateBoard(metaState, sa.sFT.singleLocation[value], value);
                 }
             }
 
             // set cells with only one possible value left
             for (int index = 0; index < 81; ++index)
                 if (!metaState->set[index] && metaState->getPossibleSize(index) == 1)
-                    updateBoard(metaState, index, metaState->getSingle(index));
+                    changed = updateBoard(metaState, index, metaState->getSingle(index));
         }
 
-        // metaState->listIncomplete();
+        metaState->listIncomplete();
 
         return iterations;
     }
