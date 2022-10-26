@@ -167,7 +167,6 @@ private:
             }
 
         int sign = pair2signature(pair);
-
         ft->doubleLocation[sign] += (10 - 9 * ft->doubleFrequency[sign]) * scan;
         ft->doubleFrequency[sign]++;
     }
@@ -214,8 +213,8 @@ public:
         int iterations = -1;
         while (metaState->incomplete() && changed)
         {
-            iterations++;
             changed = false;
+            iterations++;
 
             // frequency analysis for possible value pruning
             for (int sweeper = 0; sweeper < 9; ++sweeper)
@@ -237,7 +236,6 @@ public:
                             if (col < colOffset || col >= colBound)
                                 metaState->possibles[targetRow * 9 + col][value] = false;
                     }
-
                     if (sa.cSpan[value] < 3)
                     {
                         int targetCol = sa.cSpan[value] + colOffset;
@@ -258,7 +256,6 @@ public:
                     {
                         int l0 = sa.rFT.doubleLocation[sign] / 10;
                         int l1 = sa.rFT.doubleLocation[sign] % 10;
-
                         for (int index = 0; index < 9; ++index)
                         {
                             int rowIndex = sweeper * 9 + index;
@@ -270,7 +267,6 @@ public:
                     {
                         int l0 = sa.cFT.doubleLocation[sign] / 10;
                         int l1 = sa.cFT.doubleLocation[sign] % 10;
-
                         for (int index = 0; index < 9; ++index)
                         {
                             int colIndex = sweeper + index * 9;
@@ -282,7 +278,6 @@ public:
                     {
                         int l0 = sa.sFT.doubleLocation[sign] / 10;
                         int l1 = sa.sFT.doubleLocation[sign] % 10;
-
                         for (int index = 0; index < 9; ++index)
                         {
                             int subIndex = subgrid2index(sweeper, index);
@@ -309,9 +304,6 @@ public:
                 if (!metaState->set[index] && metaState->getPossibleSize(index) == 1)
                     changed = updateBoard(metaState, index, metaState->getSingle(index));
         }
-
-        metaState->listIncomplete();
-
         return iterations;
     }
 };

@@ -14,15 +14,15 @@ int main()
 
     // load game board with preset cells
     { // hard
-        game.setRowWithString(0, "--24-----");
-        game.setRowWithString(1, "--45-6-2-");
-        game.setRowWithString(2, "5167-8---");
-        game.setRowWithString(3, "---83--12");
-        game.setRowWithString(4, "-28--7-5-");
-        game.setRowWithString(5, "--5--9--8");
-        game.setRowWithString(6, "---9841-6");
-        game.setRowWithString(7, "-43-5----");
-        game.setRowWithString(8, "----7---5");
+        game.setRowWithString(0, "1-9------");
+        game.setRowWithString(1, "7----6--5");
+        game.setRowWithString(2, "86----4--");
+        game.setRowWithString(3, "---1--26-");
+        game.setRowWithString(4, "-----2---");
+        game.setRowWithString(5, "--1795---");
+        game.setRowWithString(6, "9---2--4-");
+        game.setRowWithString(7, "-1---7-3-");
+        game.setRowWithString(8, "--53----9");
     }
 
     game.print();
