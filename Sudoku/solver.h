@@ -115,33 +115,23 @@ private:
 
         // update sub grid span data
         for (int value = 0; value < 9; ++value)
-        {
-            for (int row = 0; row < 3; ++row)
+            for (int sweep = 0; sweep < 3; ++sweep)
             {
-                if (rSpanRegisters[row][value])
+                if (rSpanRegisters[sweep][value] && sa->rSpan[value] != 5)
                 {
                     if (sa->rSpan[value] != 4)
-                    {
-                        sa->rSpan[value] = 4;
-                        break;
-                    }
-                    sa->rSpan[value] = row;
+                        sa->rSpan[value] = 5;
+                    else
+                        sa->rSpan[value] = sweep;
                 }
-            }
-
-            for (int col = 0; col < 3; ++col)
-            {
-                if (cSpanRegisters[col][value])
+                if (cSpanRegisters[sweep][value] && sa->cSpan[value] != 5)
                 {
                     if (sa->cSpan[value] != 4)
-                    {
-                        sa->cSpan[value] = 4;
-                        break;
-                    }
-                    sa->cSpan[value] = col;
+                        sa->cSpan[value] = 5;
+                    else
+                        sa->cSpan[value] = sweep;
                 }
             }
-        }
     };
 
     /**
