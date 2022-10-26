@@ -223,8 +223,6 @@ public:
                 SweepAnalysis sa;
                 frequencyAnalysis(&sa, metaState, sweeper);
 
-                cout << sweeper << endl;
-
                 // prune possible values from cells with subgrid single span rule
                 int rowOffset = (sweeper / 3) * 3;
                 int rowBound = ((sweeper / 3) + 1) * 3;
@@ -232,17 +230,22 @@ public:
                 int colBound = ((sweeper % 3) + 1) * 3;
                 for (int value = 0; value < 9; ++value)
                 {
-                    cout << sa.rSpan[value] << " ";
                     if (sa.rSpan[value] < 3)
                     {
-                        int col = sa.rSpan[value] + colOffset;
+                        int targetRow = sa.rSpan[value] + rowOffset;
+                        for (int col = 0; col < 9; ++col)
+                            if (col < colOffset || col >= colBound)
+                                metaState->possibles[targetRow * 9 + col][value] = false;
                     }
 
                     if (sa.cSpan[value] < 3)
                     {
+                        int targetCol = sa.cSpan[value] + colOffset;
+                        for (int row = 0; row < 9; ++row)
+                            if (row < rowOffset || row >= rowBound)
+                                metaState->possibles[row * 9 + targetCol][value] = false;
                     }
                 }
-                cout << endl;
 
                 // prune possible values from cells with double pair rule
                 for (int sign = 0; sign < 36; ++sign)
