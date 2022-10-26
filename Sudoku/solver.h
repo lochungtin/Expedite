@@ -60,6 +60,13 @@ private:
      */
     void frequencyAnalysis(SweepAnalysis *sa, MetaState *metaState, int sweeper)
     {
+        bool rSpanRegisters[3][9] = {{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                     {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        bool cSpanRegisters[3][9] = {{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                     {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
         // loop through all relative indices w.r.t. sweeper index
         for (int scan = 0; scan < 9; ++scan)
         {
@@ -68,41 +75,72 @@ private:
             int colIndex = sweeper + (scan * 9);
             int subIndex = subgrid2index(sweeper, scan);
 
-            // update single frequency data
-            for (int value = 0; value < 9; ++value)
+            int subRow = scan / 3;
+            int subCol = scan % 3;
+
+            // update row frequency data
+            if (!metaState->set[rowIndex])
             {
-                if (!metaState->set[rowIndex] && metaState->possibles[rowIndex][value])
-                    singleFrequencyUpdate(&sa->rFT, rowIndex, value);
-                if (!metaState->set[colIndex] && metaState->possibles[colIndex][value])
-                    singleFrequencyUpdate(&sa->cFT, colIndex, value);
-                if (!metaState->set[subIndex] && metaState->possibles[subIndex][value])
-                    singleFrequencyUpdate(&sa->sFT, subIndex, value);
+                for (int value = 0; value < 9; ++value)
+                    if (metaState->possibles[rowIndex][value])
+                        singleFrequencyUpdate(&sa->rFT, rowIndex, value);
+                if (metaState->getPossibleSize(rowIndex) == 2)
+                    doubleFrequencyUpdate(metaState, &sa->rFT, rowIndex, scan);
+            }
+            // update column frequency data
+            if (!metaState->set[colIndex])
+            {
+                for (int value = 0; value < 9; ++value)
+                    if (metaState->possibles[colIndex][value])
+                        singleFrequencyUpdate(&sa->cFT, colIndex, value);
+                if (metaState->getPossibleSize(colIndex) == 2)
+                    doubleFrequencyUpdate(metaState, &sa->cFT, colIndex, scan);
+            }
+            // update subgrid frequency data
+            if (!metaState->set[subIndex])
+            {
+                for (int value = 0; value < 9; ++value)
+                    if (metaState->possibles[subIndex][value])
+                    {
+                        singleFrequencyUpdate(&sa->sFT, subIndex, value);
 
-                // subgrid possible value row and column span analysis
-                if (!metaState->set[subIndex] && metaState->possibles[subIndex][value])
+                        rSpanRegisters[subRow][value] = true;
+                        cSpanRegisters[subCol][value] = true;
+                    }
+
+                if (metaState->getPossibleSize(subIndex) == 2)
+                    doubleFrequencyUpdate(metaState, &sa->sFT, subIndex, scan);
+            }
+        }
+
+        // update sub grid span data
+        for (int value = 0; value < 9; ++value)
+        {
+            for (int row = 0; row < 3; ++row)
+            {
+                if (rSpanRegisters[row][value])
                 {
-                    int subRow = value / 3;
-                    int subCol = value % 3;
-
-                    if (sa->rSpan[value] == 4)
-                        sa->rSpan[value] = subRow;
-                    else if (sa->rSpan[value] != subRow)
-                        sa->rSpan[value] = 5;
-
-                    if (sa->cSpan[value] == 4)
-                        sa->cSpan[value] = subCol;
-                    else if (sa->cSpan[value] != subCol)
-                        sa->cSpan[value] = 5;
+                    if (sa->rSpan[value] != 4)
+                    {
+                        sa->rSpan[value] = 4;
+                        break;
+                    }
+                    sa->rSpan[value] = row;
                 }
             }
 
-            // update row double pair frequencies
-            if (!metaState->set[rowIndex] && metaState->getPossibleSize(rowIndex) == 2)
-                doubleFrequencyUpdate(metaState, &sa->rFT, rowIndex, scan);
-            if (!metaState->set[colIndex] && metaState->getPossibleSize(colIndex) == 2)
-                doubleFrequencyUpdate(metaState, &sa->cFT, colIndex, scan);
-            if (!metaState->set[subIndex] && metaState->getPossibleSize(subIndex) == 2)
-                doubleFrequencyUpdate(metaState, &sa->sFT, subIndex, scan);
+            for (int col = 0; col < 3; ++col)
+            {
+                if (cSpanRegisters[col][value])
+                {
+                    if (sa->cSpan[value] != 4)
+                    {
+                        sa->cSpan[value] = 4;
+                        break;
+                    }
+                    sa->cSpan[value] = col;
+                }
+            }
         }
     };
 
@@ -152,7 +190,7 @@ private:
      * @param p0        pair[0]
      * @param p1        pair[1]
      */
-    bool removePossiblePair(MetaState *metaState, int index, int p0, int p1)
+    void removePossiblePair(MetaState *metaState, int index, int p0, int p1)
     {
         metaState->possibles[index][p0] = false;
         metaState->possibles[index][p1] = false;
@@ -195,13 +233,16 @@ public:
                 SweepAnalysis sa;
                 frequencyAnalysis(&sa, metaState, sweeper);
 
+                cout << sweeper << endl;
+
                 // prune possible values from cells with subgrid single span rule
                 int rowOffset = (sweeper / 3) * 3;
                 int rowBound = ((sweeper / 3) + 1) * 3;
                 int colOffset = (sweeper % 3) * 3;
-                int rowBound = ((sweeper % 3) + 1) * 3;
+                int colBound = ((sweeper % 3) + 1) * 3;
                 for (int value = 0; value < 9; ++value)
                 {
+                    cout << sa.rSpan[value] << " ";
                     if (sa.rSpan[value] < 3)
                     {
                         int col = sa.rSpan[value] + colOffset;
@@ -211,6 +252,7 @@ public:
                     {
                     }
                 }
+                cout << endl;
 
                 // prune possible values from cells with double pair rule
                 for (int sign = 0; sign < 36; ++sign)
