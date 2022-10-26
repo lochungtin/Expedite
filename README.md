@@ -63,7 +63,7 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 ### <a href="Sudoku/README.md">Sudoku</a>
 
--   Status: 📒 Backlog
+-   Status: ✅ Complete
 -   Web Game: 📒 Backlog
 
 ## Other Related Work
