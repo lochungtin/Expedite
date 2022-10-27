@@ -1,13 +1,11 @@
 // ===== CONST =====
 // representation
 const UNKNOWN = 0;
-const EMPTY = 9;
-const FLAG = 10;
-const BOMB = 11;
 
 // color mapping
 const fillMap = {
-	9: '#dfbd69',
+	0: '#ffffff',
+	1: '#dfbd69',
 };
 
 const strokeMap = {
@@ -34,6 +32,7 @@ let ctx;
 // ===== DATA =====
 let puzzle = '...465......2..7..9....76..6....234..15...2.9.4...8........6..17.1...9.3..9...5..';
 let grid;
+let hints;
 let possibles;
 
 // ===== not so hidden =====
@@ -59,16 +58,24 @@ const init = () => {
 
 	// initialise arrays
 	grid = new Array(9);
+	hints = new Array(9);
 	possibles = new Array(9);
 	for (let i = 0; i < 9; ++i) {
 		grid[i] = new Array(9);
-
+		hints[i] = new Array(9);
 		possibles[i] = new Array(9);
 		for (let j = 0; j < 9; ++j) possibles[i][j] = new Array(9).fill(false);
 	}
 
+	puzzle = puzzle.replace(/\./g, UNKNOWN.toString());
+
 	// load puzzle into grid
-	for (let i = 0; i < 9; ++i) for (let j = 0; j < 9; ++j) grid[i][j] = puzzle[i * 9 + j];
+	for (let i = 0; i < 9; ++i)
+		for (let j = 0; j < 9; ++j) {
+			let val = parseInt(puzzle[i * 9 + j]);
+			grid[i][j] = val;
+			hints[i][j] = val !== UNKNOWN;
+		}
 
 	render();
 };
@@ -95,8 +102,8 @@ const render = () => {
 				strokeMap[highlightShift],
 			);
 
-			if (data > UNKNOWN && data < EMPTY) {
-				ctx.fillStyle = '#ffffff';
+			if (data !== UNKNOWN) {
+				ctx.fillStyle = fillMap[hints[i][j] * 1];
 				ctx.fillText(data, T_PAD_L + j * C_DIM_GAP, T_PAD_T + i * C_DIM_GAP);
 			}
 		}
