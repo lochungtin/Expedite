@@ -8,6 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel='stylesheet' href='../global.css' />
     <script src='../script.js'></script>
+    <script src='./script.js'></script>
 </head>
 
 <body>
@@ -34,6 +35,25 @@
         <button onclick='toggleInfo(false)'>
             <img height="40" src="../assets/icons/close.svg" alt='close' />
         </button>
+
+        <div class='menuContent'>
+            <p class='infoText infoTitle'>How To Play</p>
+            <div class='infoTextGap'></div>
+            <div class='infoRow'>
+                <img height='50' src='../assets/icons/left_click.svg' alt='left' />
+                <p class='infoTextCell'>
+                    <span>[ Left Click ]</span> to fill / remove a <span>value</span> from the cell
+                </p>
+            </div>
+            <div class='infoRow'>
+                <img height='50' src='../assets/icons/right_click.svg' alt='right' />
+                <p class='infoTextCell'>
+                    <span>[ Right Click ]</span> to add / remove a <span>possible value</span> from the cell
+                </p>
+            </div>
+            <div class='infoTextGap'></div>
+            <p>The grid will turn green when puzzle is correctly filled.</p>
+        </div>
     </div>
 
     <main>
