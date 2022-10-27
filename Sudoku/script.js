@@ -108,19 +108,61 @@ const click = (relX, relY, btn) => {
 		}
 	}
 	else {
-		if (grid[relY][relX])
+		if (grid[relY][relX] === selected)
 			grid[relY][relX] = UNKNOWN;
 		else {
 			grid[relY][relX] = selected;
-			possibles[relY][relX] = new Array(9).fill(false);
+			
+			let sRowOffset = Math.floor(relY / 3) * 3;
+			let sColOffset = Math.floor(relX / 3) * 3;
+			
+			for (let i = 0; i < 9; ++i) {
+				possibles[relY][relX][i] = false;
+				let sRow = sRowOffset + Math.floor(i / 3);
+				let sCol = sColOffset + (i % 3);
+	
+				if (i !== relX)
+					possibles[relY][i][selected - 1] = false;
+				if (i !== relY)
+					possibles[i][relX][selected - 1] = false;
+				if (i !== sRow && i !== sCol)
+					possibles[sRow][sCol][selected - 1] = false;
+			}
 		}
 	}
 
 	render();
 };
 
+// check if puzzle is complete
 const isComplete = () => {
-	
+	for (let i = 0; i < 9; ++i) {
+		let rCount = new Array(9).fill(0);
+		let cCount = new Array(9).fill(0);
+		let sCount = new Array(9).fill(0);
+
+		let sRowOffset = Math.floor(i / 3) * 3;
+		let sColOffset = i % 3 * 3;
+
+		for (let j = 0; j < 9; ++j) {
+			let sRow = sRowOffset + (j / 3);
+			let sCol = sColOffset + (j % 3);
+
+			rCount[grid[i][j] - 1]++;
+			if (rCount[grid[i][j] - 1] == 2)
+				return false;
+
+			cCount[grid[j][i] - 1]++;
+			if (cCount[grid[j][i] - 1] == 2)
+				return false;
+
+			sCount[grid[sRow][sCol] - 1]++;
+			if (sCount[grid[sRow][sCol] - 1] == 2)
+				return false;
+		}
+	}
+
+	return true;
 }
 
 // render canvas
