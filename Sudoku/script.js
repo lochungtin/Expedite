@@ -13,6 +13,7 @@ const strokeMap = {
 	1: '#444444',
 	2: '#ffffff',
 	3: '#dfbd69',
+	4: '#26de81',
 };
 
 // cell dimensions
@@ -118,8 +119,12 @@ const click = (relX, relY, btn) => {
 	render();
 };
 
+const isComplete = () => {
+	
+}
+
 // render canvas
-const render = () => {
+const render = (complete = false) => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	for (let i = 0; i < 9; ++i) {
@@ -129,6 +134,8 @@ const render = () => {
 			let data = grid[j][i];
 			if (data === selected)
 				highlightShift = 2;
+			if (complete)
+				highlightShift = 4;
 
 			let cellY = C_PAD_T + j * C_DIM_GAP;
 			drawRoundRect(cellX, cellY, C_DIM_R, C_DIM, strokeMap[highlightShift]);
@@ -160,8 +167,6 @@ const render = () => {
 };
 
 // ===== AUX =====
-// ===== DRAW =====
-// draw rounded rectangle
 const drawRoundRect = (x, y, radius, size, stroke, fill = false) => {
 	ctx.beginPath();
 
