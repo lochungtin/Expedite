@@ -112,15 +112,15 @@ const click = (relX, relY, btn) => {
 			grid[relY][relX] = UNKNOWN;
 		else {
 			grid[relY][relX] = selected;
-			
+
 			let sRowOffset = Math.floor(relY / 3) * 3;
 			let sColOffset = Math.floor(relX / 3) * 3;
-			
+
 			for (let i = 0; i < 9; ++i) {
 				possibles[relY][relX][i] = false;
 				let sRow = sRowOffset + Math.floor(i / 3);
 				let sCol = sColOffset + (i % 3);
-	
+
 				if (i !== relX)
 					possibles[relY][i][selected - 1] = false;
 				if (i !== relY)
@@ -131,7 +131,7 @@ const click = (relX, relY, btn) => {
 		}
 	}
 
-	render();
+	render(isComplete());
 };
 
 // check if puzzle is complete
@@ -145,8 +145,15 @@ const isComplete = () => {
 		let sColOffset = i % 3 * 3;
 
 		for (let j = 0; j < 9; ++j) {
-			let sRow = sRowOffset + (j / 3);
+			let sRow = sRowOffset + Math.floor(j / 3);
 			let sCol = sColOffset + (j % 3);
+
+			if (grid[i][j] === 0)
+				return false;
+			if (grid[j][i] === 0)
+				return false;
+			if (grid[sRow][sCol] === 0)
+				return false;
 
 			rCount[grid[i][j] - 1]++;
 			if (rCount[grid[i][j] - 1] == 2)
