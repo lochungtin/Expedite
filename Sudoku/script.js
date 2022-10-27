@@ -11,6 +11,7 @@ const fillMap = {
 const strokeMap = {
 	0: '#000000',
 	1: '#444444',
+	2: '#dfbd69',
 };
 
 // cell dimensions
@@ -26,6 +27,9 @@ const M_DIM_R = 2;
 const M_DIM_GAP = 10;
 const M_DIM_REL_PAD = 8;
 
+const S_PAD_T = 600;
+const S_PAD_TE = 626.5;
+
 // text dimensions
 const T_PAD_T = 176.5;
 const T_PAD_L = 120;
@@ -36,7 +40,7 @@ let ctx;
 
 // ===== DATA =====
 let puzzle = '...465......2..7..9....76..6....234..15...2.9.4...8........6..17.1...9.3..9...5..';
-let selected = 2;
+let selected = 1;
 let grid;
 let hints;
 let possibles;
@@ -117,13 +121,13 @@ const click = (relX, relY, btn) => {
 const render = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	for (let i = 0; i < 9; ++i)
+	for (let i = 0; i < 9; ++i) {
+		let cellX = C_PAD_L + i * C_DIM_GAP;
 		for (let j = 0; j < 9; ++j) {
-			let highlightShift = (Math.floor(i / 3) % 2 === Math.floor(j / 3) % 2) * 1;
+			let highlightShift = (Math.floor(j / 3) % 2 === Math.floor(i / 3) % 2) * 1;
 			let data = grid[i][j];
 
-			let cellX = C_PAD_L + j * C_DIM_GAP;
-			let cellY = C_PAD_T + i * C_DIM_GAP;
+			let cellY = C_PAD_T + j * C_DIM_GAP;
 			drawRoundRect(cellX, cellY, C_DIM_R, C_DIM, strokeMap[highlightShift]);
 
 			// display cell value
@@ -135,7 +139,7 @@ const render = () => {
 			// display possibles
 			for (let k = 0; k < 3; ++k)
 				for (let h = 0; h < 3; ++h)
-					if (possibles[i][j][k * 3 + h])
+					if (possibles[j][i][k * 3 + h])
 						drawRoundRect(
 							cellX + M_DIM_REL_PAD + h * M_DIM_GAP,
 							cellY + M_DIM_REL_PAD + k * M_DIM_GAP,
@@ -145,6 +149,11 @@ const render = () => {
 							fillMap[1],
 						);
 		}
+
+		drawRoundRect(cellX, S_PAD_T, C_DIM_R, C_DIM, strokeMap[(selected - 1 === i) * 2]);
+		ctx.fillStyle = fillMap[0];
+		ctx.fillText(i + 1, T_PAD_L + i * C_DIM_GAP, S_PAD_TE);
+	}
 };
 
 // ===== AUX =====
@@ -206,8 +215,10 @@ window.onload = () => {
 
 	window.addEventListener('keypress', (event) => {
 		let key = parseInt(event.key)
-		if (!isNaN(key) && key > 0)
+		if (!isNaN(key) && key > 0) {
 			selected = key;
+			render();
+		}
 	})
 
 	// set ctx styles
