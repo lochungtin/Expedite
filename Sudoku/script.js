@@ -21,6 +21,11 @@ const C_DIM = 40;
 const C_DIM_R = 5;
 const C_DIM_GAP = 45;
 
+const M_DIM = 5;
+const M_DIM_R = 2;
+const M_DIM_GAP = 10;
+const M_DIM_REL_PAD = 8;
+
 // text dimensions
 const T_PAD_T = 176.5;
 const T_PAD_L = 120;
@@ -31,6 +36,7 @@ let ctx;
 
 // ===== DATA =====
 let puzzle = '...465......2..7..9....76..6....234..15...2.9.4...8........6..17.1...9.3..9...5..';
+let selected = 2;
 let grid;
 let hints;
 let possibles;
@@ -82,9 +88,29 @@ const init = () => {
 
 // handle click event
 const click = (relX, relY, btn) => {
-	if (hints[relY][relX]) return;
+	if (relX < 0 || relX > 8 || relY < 0 || relY > 8) return;
+	if (hints[relY % 9][relX % 9]) return;
 
 	console.log(relX, relY, btn);
+
+	if (btn) {
+		if (possibles[relY][relX][selected - 1])
+			possibles[relY][relX][selected - 1] = false;
+		else {
+			possibles[relY][relX][selected - 1] = true;
+			possibles[relY][relX] = new Array(9).fill(true);
+			grid[relY][relX] = UNKNOWN;
+		}
+	}
+	else {
+		if (grid[relY][relX])
+			grid[relY][relX] = UNKNOWN;
+		else {
+			grid[relY][relX] = selected;
+			possibles[relY][relX] = new Array(9).fill(false);
+		}
+	}
+
 	render();
 };
 
@@ -97,38 +123,53 @@ const render = () => {
 			let highlightShift = (Math.floor(i / 3) % 2 === Math.floor(j / 3) % 2) * 1;
 			let data = grid[i][j];
 
-			drawRoundRect(
-				C_PAD_L + j * C_DIM_GAP,
-				C_PAD_T + i * C_DIM_GAP,
-				strokeMap[highlightShift],
-			);
+			let cellX = C_PAD_L + j * C_DIM_GAP;
+			let cellY = C_PAD_T + i * C_DIM_GAP;
+			drawRoundRect(cellX, cellY, C_DIM_R, C_DIM, strokeMap[highlightShift]);
 
 			if (data !== UNKNOWN) {
 				ctx.fillStyle = fillMap[hints[i][j] * 1];
 				ctx.fillText(data, T_PAD_L + j * C_DIM_GAP, T_PAD_T + i * C_DIM_GAP);
 			}
+
+			for (let k = 0; k < 3; ++k)
+				for (let h = 0; h < 3; ++h)
+					if (possibles[i][j][k * 3 + h])
+						drawRoundRect(
+							cellX + M_DIM_REL_PAD + h * M_DIM_GAP,
+							cellY + M_DIM_REL_PAD + k * M_DIM_GAP,
+							M_DIM_R,
+							M_DIM,
+							undefined,
+							fillMap[1],
+						);
 		}
 };
 
 // ===== AUX =====
 // ===== DRAW =====
 // draw rounded rectangle
-const drawRoundRect = (x, y, stroke) => {
+const drawRoundRect = (x, y, radius, size, stroke, fill = false) => {
 	ctx.beginPath();
 
-	ctx.moveTo(x + C_DIM_R, y);
-	ctx.lineTo(x + C_DIM - C_DIM_R, y);
-	ctx.quadraticCurveTo(x + C_DIM, y, x + C_DIM, y + C_DIM_R);
-	ctx.lineTo(x + C_DIM, y + C_DIM - C_DIM_R);
-	ctx.quadraticCurveTo(x + C_DIM, y + C_DIM, x + C_DIM - C_DIM_R, y + C_DIM);
-	ctx.lineTo(x + C_DIM_R, y + C_DIM);
-	ctx.quadraticCurveTo(x, y + C_DIM, x, y + C_DIM - C_DIM_R);
-	ctx.lineTo(x, y + C_DIM_R);
-	ctx.quadraticCurveTo(x, y, x + C_DIM_R, y);
+	ctx.moveTo(x + radius, y);
+	ctx.lineTo(x + size - radius, y);
+	ctx.quadraticCurveTo(x + size, y, x + size, y + radius);
+	ctx.lineTo(x + size, y + size - radius);
+	ctx.quadraticCurveTo(x + size, y + size, x + size - radius, y + size);
+	ctx.lineTo(x + radius, y + size);
+	ctx.quadraticCurveTo(x, y + size, x, y + size - radius);
+	ctx.lineTo(x, y + radius);
+	ctx.quadraticCurveTo(x, y, x + radius, y);
 
 	if (stroke) {
 		ctx.strokeStyle = stroke;
 		ctx.stroke();
+	}
+
+	if (fill) {
+		ctx.fillStyle = fill;
+		ctx.fill();
 	}
 
 	ctx.closePath();
