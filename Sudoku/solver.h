@@ -188,7 +188,19 @@ private:
 public:
     Solver(Game *game) : game(game)
     {
-        states.push(pair<Board, MetaState>{*game->getBoard(), MetaState()});
+        // initial metaState
+        MetaState metaState = MetaState();
+
+        // add initial cells to metaState
+        for (int index = 0; index < 81; ++index)
+        {
+            char ch = game->getBoard()->readCell(index);
+            if (ch != '-')
+                metaState.setCell(index, ch - '1');
+        }
+
+        // push board metaState pair to state stack
+        states.push(pair<Board, MetaState>{*game->getBoard(), metaState});
     }
 
     /**
@@ -200,14 +212,6 @@ public:
     {
         Board *board = &states.top().first;
         MetaState *metaState = &states.top().second;
-
-        // create meta state from board input
-        for (int index = 0; index < 81; ++index)
-        {
-            char ch = board->readCell(index);
-            if (ch != '-')
-                metaState->setCell(index, ch - '1');
-        }
 
         bool changed = true;
         int iterations = -1;
