@@ -125,7 +125,7 @@ const click = (relX, relY, btn) => {
 					possibles[relY][i][selected - 1] = false;
 				if (i !== relY)
 					possibles[i][relX][selected - 1] = false;
-				if (i !== sRow && i !== sCol)
+				if (relY !== sRow && relX !== sCol)
 					possibles[sRow][sCol][selected - 1] = false;
 			}
 		}
