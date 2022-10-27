@@ -11,7 +11,8 @@ const fillMap = {
 const strokeMap = {
 	0: '#000000',
 	1: '#444444',
-	2: '#dfbd69',
+	2: '#ffffff',
+	3: '#dfbd69',
 };
 
 // cell dimensions
@@ -125,15 +126,17 @@ const render = () => {
 		let cellX = C_PAD_L + i * C_DIM_GAP;
 		for (let j = 0; j < 9; ++j) {
 			let highlightShift = (Math.floor(j / 3) % 2 === Math.floor(i / 3) % 2) * 1;
-			let data = grid[i][j];
+			let data = grid[j][i];
+			if (data === selected)
+				highlightShift = 2;
 
 			let cellY = C_PAD_T + j * C_DIM_GAP;
 			drawRoundRect(cellX, cellY, C_DIM_R, C_DIM, strokeMap[highlightShift]);
 
 			// display cell value
 			if (data !== UNKNOWN) {
-				ctx.fillStyle = fillMap[hints[i][j] * 1];
-				ctx.fillText(data, T_PAD_L + j * C_DIM_GAP, T_PAD_T + i * C_DIM_GAP);
+				ctx.fillStyle = fillMap[hints[j][i] * 1];
+				ctx.fillText(data, T_PAD_L + i * C_DIM_GAP, T_PAD_T + j * C_DIM_GAP);
 			}
 
 			// display possibles
@@ -150,7 +153,7 @@ const render = () => {
 						);
 		}
 
-		drawRoundRect(cellX, S_PAD_T, C_DIM_R, C_DIM, strokeMap[(selected - 1 === i) * 2]);
+		drawRoundRect(cellX, S_PAD_T, C_DIM_R, C_DIM, strokeMap[(selected - 1 === i) * 3]);
 		ctx.fillStyle = fillMap[0];
 		ctx.fillText(i + 1, T_PAD_L + i * C_DIM_GAP, S_PAD_TE);
 	}
