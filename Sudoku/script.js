@@ -98,7 +98,6 @@ const click = (relX, relY, btn) => {
 			possibles[relY][relX][selected - 1] = false;
 		else {
 			possibles[relY][relX][selected - 1] = true;
-			possibles[relY][relX] = new Array(9).fill(true);
 			grid[relY][relX] = UNKNOWN;
 		}
 	}
@@ -127,11 +126,13 @@ const render = () => {
 			let cellY = C_PAD_T + i * C_DIM_GAP;
 			drawRoundRect(cellX, cellY, C_DIM_R, C_DIM, strokeMap[highlightShift]);
 
+			// display cell value
 			if (data !== UNKNOWN) {
 				ctx.fillStyle = fillMap[hints[i][j] * 1];
 				ctx.fillText(data, T_PAD_L + j * C_DIM_GAP, T_PAD_T + i * C_DIM_GAP);
 			}
 
+			// display possibles
 			for (let k = 0; k < 3; ++k)
 				for (let h = 0; h < 3; ++h)
 					if (possibles[i][j][k * 3 + h])
@@ -202,6 +203,12 @@ window.onload = () => {
 			1,
 		);
 	});
+
+	window.addEventListener('keypress', (event) => {
+		let key = parseInt(event.key)
+		if (!isNaN(key) && key > 0)
+			selected = key;
+	})
 
 	// set ctx styles
 	ctx.lineWidth = 2;
