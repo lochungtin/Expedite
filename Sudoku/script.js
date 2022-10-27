@@ -82,6 +82,8 @@ const init = () => {
 
 // handle click event
 const click = (relX, relY, btn) => {
+	if (hints[relY][relX]) return;
+
 	console.log(relX, relY, btn);
 	render();
 };
@@ -98,7 +100,6 @@ const render = () => {
 			drawRoundRect(
 				C_PAD_L + j * C_DIM_GAP,
 				C_PAD_T + i * C_DIM_GAP,
-				undefined,
 				strokeMap[highlightShift],
 			);
 
@@ -112,7 +113,7 @@ const render = () => {
 // ===== AUX =====
 // ===== DRAW =====
 // draw rounded rectangle
-const drawRoundRect = (x, y, fill, stroke) => {
+const drawRoundRect = (x, y, stroke) => {
 	ctx.beginPath();
 
 	ctx.moveTo(x + C_DIM_R, y);
@@ -124,11 +125,6 @@ const drawRoundRect = (x, y, fill, stroke) => {
 	ctx.quadraticCurveTo(x, y + C_DIM, x, y + C_DIM - C_DIM_R);
 	ctx.lineTo(x, y + C_DIM_R);
 	ctx.quadraticCurveTo(x, y, x + C_DIM_R, y);
-
-	if (fill) {
-		ctx.fillStyle = fill;
-		ctx.fill();
-	}
 
 	if (stroke) {
 		ctx.strokeStyle = stroke;
