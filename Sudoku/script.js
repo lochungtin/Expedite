@@ -41,7 +41,7 @@ let canvas;
 let ctx;
 
 // ===== DATA =====
-let puzzle = '...465......2..7..9....76..6....234..15...2.9.4...8........6..17.1...9.3..9...5..';
+let puzzle = '9-4-653-----2--5-11-683---428----745--7-82-9-56-7--83-795-2-61--3-7-2---12---47-';
 let selected = 1;
 let grid;
 let hints;
@@ -79,7 +79,7 @@ const init = () => {
 		for (let j = 0; j < 9; ++j) possibles[i][j] = new Array(9).fill(false);
 	}
 
-	puzzle = puzzle.replace(/\./g, UNKNOWN.toString());
+	puzzle = puzzle.replace(/-/g, UNKNOWN.toString());
 
 	// load puzzle into grid
 	for (let i = 0; i < 9; ++i)
@@ -100,16 +100,13 @@ const click = (relX, relY, btn) => {
 	console.log(relX, relY, btn);
 
 	if (btn) {
-		if (possibles[relY][relX][selected - 1])
-			possibles[relY][relX][selected - 1] = false;
+		if (possibles[relY][relX][selected - 1]) possibles[relY][relX][selected - 1] = false;
 		else {
 			possibles[relY][relX][selected - 1] = true;
 			grid[relY][relX] = UNKNOWN;
 		}
-	}
-	else {
-		if (grid[relY][relX] === selected)
-			grid[relY][relX] = UNKNOWN;
+	} else {
+		if (grid[relY][relX] === selected) grid[relY][relX] = UNKNOWN;
 		else {
 			grid[relY][relX] = selected;
 
@@ -121,12 +118,9 @@ const click = (relX, relY, btn) => {
 				let sRow = sRowOffset + Math.floor(i / 3);
 				let sCol = sColOffset + (i % 3);
 
-				if (i !== relX)
-					possibles[relY][i][selected - 1] = false;
-				if (i !== relY)
-					possibles[i][relX][selected - 1] = false;
-				if (relY !== sRow && relX !== sCol)
-					possibles[sRow][sCol][selected - 1] = false;
+				if (i !== relX) possibles[relY][i][selected - 1] = false;
+				if (i !== relY) possibles[i][relX][selected - 1] = false;
+				if (relY !== sRow && relX !== sCol) possibles[sRow][sCol][selected - 1] = false;
 			}
 		}
 	}
@@ -142,35 +136,29 @@ const isComplete = () => {
 		let sCount = new Array(9).fill(0);
 
 		let sRowOffset = Math.floor(i / 3) * 3;
-		let sColOffset = i % 3 * 3;
+		let sColOffset = (i % 3) * 3;
 
 		for (let j = 0; j < 9; ++j) {
 			let sRow = sRowOffset + Math.floor(j / 3);
 			let sCol = sColOffset + (j % 3);
 
-			if (grid[i][j] === 0)
-				return false;
-			if (grid[j][i] === 0)
-				return false;
-			if (grid[sRow][sCol] === 0)
-				return false;
+			if (grid[i][j] === 0) return false;
+			if (grid[j][i] === 0) return false;
+			if (grid[sRow][sCol] === 0) return false;
 
 			rCount[grid[i][j] - 1]++;
-			if (rCount[grid[i][j] - 1] == 2)
-				return false;
+			if (rCount[grid[i][j] - 1] == 2) return false;
 
 			cCount[grid[j][i] - 1]++;
-			if (cCount[grid[j][i] - 1] == 2)
-				return false;
+			if (cCount[grid[j][i] - 1] == 2) return false;
 
 			sCount[grid[sRow][sCol] - 1]++;
-			if (sCount[grid[sRow][sCol] - 1] == 2)
-				return false;
+			if (sCount[grid[sRow][sCol] - 1] == 2) return false;
 		}
 	}
 
 	return true;
-}
+};
 
 // render canvas
 const render = (complete = false) => {
@@ -181,10 +169,8 @@ const render = (complete = false) => {
 		for (let j = 0; j < 9; ++j) {
 			let highlightShift = (Math.floor(j / 3) % 2 === Math.floor(i / 3) % 2) * 1;
 			let data = grid[j][i];
-			if (data === selected)
-				highlightShift = 2;
-			if (complete)
-				highlightShift = 4;
+			if (data === selected) highlightShift = 2;
+			if (complete) highlightShift = 4;
 
 			let cellY = C_PAD_T + j * C_DIM_GAP;
 			drawRoundRect(cellX, cellY, C_DIM_R, C_DIM, strokeMap[highlightShift]);
@@ -271,12 +257,12 @@ window.onload = () => {
 	});
 
 	window.addEventListener('keypress', (event) => {
-		let key = parseInt(event.key)
+		let key = parseInt(event.key);
 		if (!isNaN(key) && key > 0) {
 			selected = key;
 			render();
 		}
-	})
+	});
 
 	// set ctx styles
 	ctx.lineWidth = 2;
