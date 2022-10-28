@@ -169,7 +169,7 @@ const render = (complete = false) => {
 		for (let j = 0; j < 9; ++j) {
 			let highlightShift = (Math.floor(j / 3) % 2 === Math.floor(i / 3) % 2) * 1;
 			let data = grid[j][i];
-			if (data === selected) highlightShift = 2;
+			if (data === selected || possibles[j][i][selected - 1]) highlightShift = 2;
 			if (complete) highlightShift = 4;
 
 			let cellY = C_PAD_T + j * C_DIM_GAP;
