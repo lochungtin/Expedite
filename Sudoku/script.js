@@ -41,7 +41,7 @@ let canvas;
 let ctx;
 
 // ===== DATA =====
-let puzzle = '9-4-653-----2--5-11-683---428----745--7-82-9-56-7--83-795-2-61--3-7-2---12---47-';
+let puzzle = '9.4.653.....2..5.11.683...428....745..7.82.9.56.7..83.795.2.61..3.7.2...12...47.';
 let selected = 1;
 let grid;
 let hints;
@@ -79,7 +79,7 @@ const init = () => {
 		for (let j = 0; j < 9; ++j) possibles[i][j] = new Array(9).fill(false);
 	}
 
-	puzzle = puzzle.replace(/-/g, UNKNOWN.toString());
+	puzzle = puzzle.replace(/\./g, UNKNOWN.toString());
 
 	// load puzzle into grid
 	for (let i = 0; i < 9; ++i)
