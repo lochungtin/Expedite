@@ -59,7 +59,7 @@ This list will be expanded upon and updated as status for sub-projects change an
 ### <a href="Snake/README.md">Snake</a>
 
 -   Status: ✅ Partial Completion | <a href="https://github.com/lochungtin/snakeAI">Reinforcement AI Complete</a>
--   Web Game: 🛠️ Work in Progress
+-   Web Game: 📒 Backlog
 
 ### <a href="Sudoku/README.md">Sudoku</a>
 
