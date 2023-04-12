@@ -1,6 +1,9 @@
+from pathlib import Path
+
 class Game:
     def __init__(self, file_index):
-        with open("configs/config_{}.txt".format(file_index), "r") as config:
+        path = Path("./BinarySudoku/configs/config_{}.txt".format(file_index))
+        with open(path, "r") as config:
             self.board = [list(line.strip()) for line in config.readlines()]
         self.size = len(self.board)
 
