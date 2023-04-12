@@ -9,7 +9,7 @@ There are 3 simple rules for a game of **Binary Sudoku**:
 3.  No 3 consecutive tiles in a row or column can be of the same colour
 
 ## Algorithm
-The intuition of the algorithm is the iteratively loop over the each row and column and matching patterns of already set cells. Each of the game rule can be converted into a pattern that could be looked for.
+The intuition of the algorithm is to iteratively loop over the each row and column and matching patterns of already set cells. Each of the game rule can be converted into a pattern that could be looked for.
 
 ### Patterns
 **Pattern 1**
@@ -41,7 +41,7 @@ The intuition of the algorithm is the iteratively loop over the each row and col
 
 (Pattern indices correspond to each game rule)
 
-### Algorithm structure
+### Algorithm Structure
 Highly abstracted algorithm pseudo-code
 ```cpp
 bool hasBoardUpdated = true;
