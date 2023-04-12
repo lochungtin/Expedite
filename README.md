@@ -65,7 +65,3 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 -   Status: ✅ Partial Completion
 -   Web Game: ✅ Complete
-
-## Other Related Work
-
-A website for algorithm visualisation and puzzle game playing is being planned.
