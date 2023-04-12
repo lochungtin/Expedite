@@ -1,6 +1,9 @@
+from pathlib import Path
+
 class Game:
     def __init__(self, file_index):
-        with open("configs/config_{}.txt".format(file_index), "r") as conf:
+        path = Path("./Sudoku/configs/config_{}.txt".format(file_index))
+        with open(path, "r") as conf:
             self.board = [list(l.strip().replace("-", " ")) for l in conf.readlines()]
         self.size = len(self.board)
 
