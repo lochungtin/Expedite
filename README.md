@@ -38,7 +38,7 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 ### <a href="MineSweeper/README.md">Mine Sweeper</a>
 
--   Status: 🛠️ Work in Progress
+-   Status: ✅ Complete
 -   Web Game: ✅ Complete
 
 ### <a href="Nonogram/README.md">Nonogram</a>
@@ -63,5 +63,5 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 ### <a href="Sudoku/README.md">Sudoku</a>
 
--   Status: ✅ Partial Completion
+-   Status: ✅ Complete
 -   Web Game: ✅ Complete
