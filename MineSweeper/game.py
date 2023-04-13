@@ -36,6 +36,9 @@ class Game:
                     count = sum(map(lambda x: self.data[x[0]][x[1]] == 9, neighbours(r, c)))
                     if self.data[r][c] != 9:
                         self.data[r][c] = count
+
+        if (row, col) in self.mines:
+            return False
     
         def reveal(r, c):
             self.board[r][c] = self.data[r][c]
@@ -45,6 +48,7 @@ class Game:
                         reveal(nr, nc)
         
         reveal(row, col)
+        return True
 
     def flag(self, row, col):
         if self.board[row][col] == " ":

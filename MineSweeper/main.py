@@ -3,13 +3,13 @@ from solver import Solver
 
 
 def main():
-    g = Game(2)
+    g = Game(0)
 
     s = Solver(g)
-    i = s.run()
+    i, q, d = s.run()
 
     print(g)
-    print("Solved in {} iterations.".format(i))
+    print("Solved in {} iterations with {} guesses and {} deaths.".format(i, q, d))
 
 
 if __name__ == "__main__":
