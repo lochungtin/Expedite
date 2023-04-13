@@ -1,4 +1,4 @@
-from random import choice, shuffle
+from random import shuffle
 
 
 class Solver:
