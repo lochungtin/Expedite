@@ -1,5 +1,5 @@
 from pathlib import Path
-from random import choices
+from random import sample
 
 
 class Game:
@@ -11,6 +11,7 @@ class Game:
         self.row, self.col, self.num = int(row), int(col), int(num)
         self.board = [[" " for _ in range(self.col)] for _ in range(self.row)]
         self.data = [[0 for _ in range(self.col)] for _ in range(self.row)]
+        self.flags = {}
         self.seeded = False
 
     def expand(self, row, col):
@@ -25,9 +26,10 @@ class Game:
             n = neighbours(row, col)
             n.append((row, col))
             cells = [(r, c) for r in range(self.row) for c in range(self.col) if (r, c) not in n]
-            self.mines = choices(cells, k=self.num)
+            self.mines = sample(cells, self.num)
             for (mr, mc) in self.mines:
                 self.data[mr][mc] = 9
+                self.flags[(mr, mc)] = False
 
             for r in range(self.row):
                 for c in range(self.col):
@@ -44,15 +46,16 @@ class Game:
         
         reveal(row, col)
 
-
     def flag(self, row, col):
-        pass
-
-    def setCell(self, row, col, value):
         if self.board[row][col] == " ":
-            self.board[row][col] = str(value * 1)
-            return True
-        return False
+            self.board[row][col] = "x"
+
+        pos = (row, col)
+        if pos in self.flags:
+            self.flags[pos] = not self.flags[pos]
+        
+    def validation(self):
+        return all(map(lambda x: x[1], self.flags.items()))
 
     def __str__(self):
         return self.__repr__()
