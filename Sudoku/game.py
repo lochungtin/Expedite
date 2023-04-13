@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 class Game:
     def __init__(self, file_index):
         path = Path("./Sudoku/configs/config_{}.txt".format(file_index))
