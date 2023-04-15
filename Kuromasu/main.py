@@ -9,8 +9,8 @@ def main():
     s = Solver(g)
     i = s.run()
 
-    # print(g)
-    # print("Solved in {} iterations.".format(i))
+    print(g)
+    print("Solved in {} iterations.".format(i))
 
 
 if __name__ == "__main__":

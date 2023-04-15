@@ -9,8 +9,8 @@ class Game:
         self.size = len(self.board)
 
     def setCell(self, row, col, value):
-        if self.board[row][col] == "-":
-            self.board[row][col] = str(value * 1)
+        if self.board[row][col] == " ":
+            self.board[row][col] = "-" if value else "x"
             return True
         return False
 

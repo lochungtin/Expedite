@@ -55,5 +55,6 @@
 		"streambuf": "cpp",
 		"typeinfo": "cpp",
 		"stack": "cpp"
-	}
+	},
+	"python.formatting.provider": "black"
 }
