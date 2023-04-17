@@ -3,7 +3,7 @@ from solver import Solver
 
 
 def main():
-    g = Game(4)
+    g = Game(6.2)
     print(g)
 
     s = Solver(g)

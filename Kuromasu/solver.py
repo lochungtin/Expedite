@@ -48,12 +48,11 @@ class Solver:
             for cell in self.i:
                 if self.__analyseCell(cell):
                     self.i.remove(cell)
-                    print(self.g)
                     print(self.i)
 
-        for r in range(self.d):
-            for c in range(self.d):
-                self.g.setCell(r, c, 0)
+        # for r in range(self.d):
+        #     for c in range(self.d):
+        #         self.g.setCell(r, c, 0)
 
         return iteration
 
@@ -64,8 +63,20 @@ class Solver:
 
     def __analyseCell(self, cell):
         spaces, trans = zip(*([self.__travel(cell, i) for i in range(4)]))
-        offset = [s - t for s, t in zip(spaces, trans)]
+
+        if cell.v == sum(spaces):
+            for i, n in enumerate(spaces):
+                next = cell.n[i] if n else None
+                for _ in range(n):
+                    if next.v == 0:
+                        self.__setCell(next.row, next.col, 1)
+                    next = next.n[i]
+                if next:
+                    self.__setCell(next.row, next.col, 0)
+            return True
+
         index, single = 0, -1
+        offset = [s - t for s, t in zip(spaces, trans)]
         for i, n in enumerate(offset):
             if n == sum(offset):
                 index, single = i, n
