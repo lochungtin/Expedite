@@ -16,52 +16,52 @@ The following list shows the puzzle games for this project and their respective 
 
 This list will be expanded upon and updated as status for sub-projects change and / or new puzzles are being added to the catalogue.
 
-### <a href="2048/">2048</a>
+### <a href="docs/2048.md/">2048</a>
 
 -   Status: 📒 Backlog
 -   Web Game: 📒 Backlog
 
-### <a href="BinarySudoku/">Binary Sudoku</a>
+### <a href="docs/BinarySudoku.md/">Binary Sudoku</a>
 
 -   Status: ✅ Complete
 -   Web Game: 📒 Backlog
 
-### <a href="Kuromasu/">Kuromasu</a>
+### <a href="docs/Kuromasu.md/">Kuromasu</a>
 
 -   Status: 📒 Backlog
 -   Web Game: 📒 Backlog
 
-### <a href="Mastermind/">Mastermind</a>
+### <a href="docs/Mastermind.md/">Mastermind</a>
 
 -   Status: 🛑 Paused
 -   Web Game: ✅ Complete
 
-### <a href="MineSweeper/">Mine Sweeper</a>
+### <a href="docs/MineSweeper.md/">Mine Sweeper</a>
 
 -   Status: ✅ Complete
 -   Web Game: ✅ Complete
 
-### <a href="Nonogram/">Nonogram</a>
+### <a href="docs/Nonogram.md/">Nonogram</a>
 
 -   Status: 🛠️ Work in Progress
 -   Web Game: 📒 Backlog
 
-### <a href="Numberlink/">Numberlink</a>
+### <a href="docs/Numberlink.md/">Numberlink</a>
 
 -   Status: 📒 Backlog
 -   Web Game: 📒 Backlog
 
-### <a href="Slitherlink/">Slitherlink</a>
+### <a href="docs/Slitherlink.md/">Slitherlink</a>
 
 -   Status: 📒 Backlog
 -   Web Game: 📒 Backlog
 
-### <a href="Snake/">Snake</a>
+### <a href="docs/Snake.md/">Snake</a>
 
 -   Status: ✅ Partial Completion | <a href="https://github.com/lochungtin/snakeAI">Reinforcement AI Complete</a>
 -   Web Game: 📒 Backlog
 
-### <a href="Sudoku/">Sudoku</a>
+### <a href="docs/Sudoku.md/">Sudoku</a>
 
 -   Status: ✅ Complete
 -   Web Game: ✅ Complete
