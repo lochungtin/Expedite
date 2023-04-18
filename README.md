@@ -10,6 +10,16 @@ Project Expedite is my attempt to create solutions, algorithms, or solvers to cl
 
 3. **Robustness** - The solution should be able to adapt to different "difficulty" levels of the game, whatever that may mean to the game, be it grid size or available options.
 
+## Usage
+
+Setup an environment with any python version `> 3.7` and run the command in the root directory.
+
+```bash
+python3 main.py --gamemode <gamemode> --config <config_file>
+```
+
+Run the command `python3 main.py --help` for more information.
+
 ## Directory and Status
 
 The following list shows the puzzle games for this project and their respective status in solution development.
