@@ -1,8 +1,8 @@
-# Binary Sudoku Solver
+# Tazuku Solver
 
 ## Game
 
-The aim of a game of binary sudoku is to fill a square grid of cells with values of either `0` or `1`. There are a few rule as to how the grids can be filled. The finish the game, all the cells of the square grid has to be filled with either a `0` or `1`, none can be left empty, while all rules has to be satisfied.
+Tazuku, also known as binary sudoku is a binary-determination logic puzzle played on a square grid. The aim of the game is to fill empty cells with values of either `0` or `1` based on information given from neighbouring cells. A complete game should have all the cells filled in a fashion where all the rules are satisfied.
 
 ## Game Rules
 

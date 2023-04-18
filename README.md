@@ -31,11 +31,6 @@ This list will be expanded upon and updated as status for sub-projects change an
 -   Status: 📒 Backlog
 -   Web Game: 📒 Backlog
 
-### <a href="docs/BinarySudoku.md/">Binary Sudoku</a>
-
--   Status: ✅ Complete
--   Web Game: 📒 Backlog
-
 ### <a href="docs/Kuromasu.md/">Kuromasu</a>
 
 -   Status: ✅ Complete
@@ -75,3 +70,8 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 -   Status: ✅ Complete
 -   Web Game: ✅ Complete
+
+### <a href="docs/Tazuku.md/">Tazuku</a>
+
+-   Status: ✅ Complete
+-   Web Game: 📒 Backlog
