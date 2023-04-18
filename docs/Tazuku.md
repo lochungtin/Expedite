@@ -6,8 +6,6 @@ Tazuku, also known as binary sudoku is a binary-determination logic puzzle playe
 
 ## Game Rules
 
-There are 3 simple rules for a game of **Binary Sudoku**:
-
 1.  Each row and column has to be made up of the same amount of `0` and `1` cells
 2.  No 2 rows or columns can be the same
 3.  No 3 consecutive tiles in a row or column can be of the same colour
