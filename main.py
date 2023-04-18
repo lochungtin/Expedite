@@ -1,5 +1,20 @@
+import getopt
+import sys
 from importlib import import_module
+from os import listdir
 from pathlib import Path
+
+
+def printHelp():
+    print("python main.py -g <gamemode> -c <config>")
+    print("\n-g --gamemode <gamemode> [REQUIRED]")
+    print("Available gamemode options include:")
+    for name in listdir(Path("configs")):
+        print(f"\t{name}")
+    print("\n-c --config <config> [REQUIRED]")
+    print(
+        '\tCheck the directory "./configs/<gamemode>/" for all config files available.'
+    )
 
 
 def execute(gamemode, config):
@@ -21,6 +36,44 @@ def execute(gamemode, config):
 
 
 if __name__ == "__main__":
-    gamemode = "kuromasu"
-    config = 6.1
+    try:
+        opts = dict(getopt.getopt(sys.argv[1:], "hg:c:", ["gamemode=", "conf="])[0])
+    except:
+        printHelp()
+        sys.exit(2)
+
+    if len(opts) < 1:
+        printHelp()
+        sys.exit(2)
+
+    gamemode, config = None, None
+    if "-g" in opts:
+        gamemode = opts["-g"]
+    if "--gamemode" in opts:
+        gamemode = opts["--gamemode"]
+    if "-c" in opts:
+        config = opts["-c"]
+    if "--config" in opts:
+        config = opts["--config"]
+
+    if f"{gamemode}.py" not in listdir(Path("games")):
+        print(f'ERROR! Game "{gamemode}" not found.')
+        sys.exit(2)
+
+    if f"{gamemode}.py" not in listdir(Path("solvers")):
+        print(f'ERROR! Game "{gamemode}" not found.')
+        sys.exit(2)
+
+    if gamemode not in listdir(Path("configs")):
+        print(f'ERROR! Config file "config_{config}.txt" not found.')
+        sys.exit(2)
+
+    if f"config_{config}.txt" not in listdir(Path(f"configs/{gamemode}")):
+        print(f'ERROR! Config file "config_{config}.txt" not found.')
+        sys.exit(2)
+
+    if gamemode is None or config is None:
+        printHelp()
+        sys.exit(2)
+
     execute(gamemode, config)
