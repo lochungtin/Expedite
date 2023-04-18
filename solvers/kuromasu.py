@@ -1,3 +1,6 @@
+from solvers.__solver import __Solver
+
+
 class Cell:
     def __init__(self, row, col, val=0, trans=False, block=False):
         self.row = row
@@ -16,11 +19,9 @@ class Cell:
         )
 
 
-class Solver:
-    def __init__(self, game):
-        self.g = game
-        self.d = game.size
-        self.b = game.board
+class Solver(__Solver):
+    def __init__(self, game) -> None:
+        super().__init__(game)
         self.i = []
         self.c = {}
 

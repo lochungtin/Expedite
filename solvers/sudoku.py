@@ -1,7 +1,9 @@
-class Solver:
-    def __init__(self, game):
-        self.g = game
-        self.b = game.board
+from solvers.__solver import __Solver
+
+
+class Solver(__Solver):
+    def __init__(self, game) -> None:
+        super().__init__(game)
         self.p = [[[True for _ in range(9)] for _ in range(9)] for _ in range(9)]
         self.s = [[False for _ in range(9)] for _ in range(9)]
 
@@ -58,10 +60,8 @@ class Solver:
                         if len(l) == 1:
                             self.__set_board(l[0][0], l[0][1], v)
 
-            for i in range(9):
-                for j in range(9):
-                    if not self.s[i][j] and self.__poss_len(self.p[i][j]) == 1:
-                        self.__set_board(i, j, self.__poss_val(self.p[i][j])[0])
+            self.__fillSingle()
+        self.__fillSingle()
 
         return iteration
 
@@ -79,6 +79,12 @@ class Solver:
             if any(map(lambda x: len(set([self.b[r][c] for (r, c) in x])) != 9, s)):
                 return False
         return True
+
+    def __fillSingle(self):
+        for i in range(9):
+            for j in range(9):
+                if not self.s[i][j] and self.__poss_len(self.p[i][j]) == 1:
+                    self.__set_board(i, j, self.__poss_val(self.p[i][j])[0])
 
     def __poss_len(self, p):
         return len(list(filter(lambda x: x, p)))

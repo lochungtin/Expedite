@@ -1,7 +1,9 @@
-class Solver:
-    def __init__(self, game):
-        self.g = game
-        self.d = game.size
+from solvers.__solver import __Solver
+
+
+class Solver(__Solver):
+    def __init__(self, game) -> None:
+        super().__init__(game)
         self.c = [
             [{"0": 0, "1": 0, "-": 0} for _ in range(self.d)],
             [{"0": 0, "1": 0, "-": 0} for _ in range(self.d)],

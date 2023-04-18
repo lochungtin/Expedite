@@ -1,7 +1,9 @@
-class Solver:
-    def __init__(self, game):
-        self.g = game
-        self.d = self.g.size
+from solvers.__solver import __Solver
+
+
+class Solver(__Solver):
+    def __init__(self, game) -> None:
+        super().__init__(game)
         self.c = [list(map(int, c)) for c in (game.rCon + game.cCon)]
         self.e = [[(0, self.d)] for _ in range(self.d * 2)]
 
