@@ -49,18 +49,18 @@ class Solver(__Solver):
                 self.c[(i + 1, s)].n[0] = self.c[(i, s)]
 
         iteration = -1
-        print(self.i)
-        while len(self.i) > 0 and iteration < 15:
+        size = len(self.i) + 1
+        while size > 0 and size != len(self.i):
+            size = len(self.i)
             iteration += 1
             for cell in self.i:
                 if self.__analyseCell(cell):
-                    print(cell)
-                    print(self.g)
                     self.i.remove(cell)
 
-        # for r in range(self.d):
-        #     for c in range(self.d):
-        #         self.g.setCell(r, c, 0)
+        if len(self.i) == 0:
+            for r in range(self.d):
+                for c in range(self.d):
+                    self.g.setCell(r, c, 0)
 
         return iteration
 
