@@ -14,8 +14,13 @@ class Cell:
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return "({}, {}) [v{} t{} b{}]".format(
-            self.row, self.col, self.v, self.t * 1, self.b * 1
+        return "({}, {}) [v{} t{} b{}] [{}]".format(
+            self.row,
+            self.col,
+            self.v,
+            self.t * 1,
+            self.b * 1,
+            " ".join(str((n != None and not n.b) * 1) for n in self.n),
         )
 
 
@@ -44,12 +49,14 @@ class Solver(__Solver):
                 self.c[(i + 1, s)].n[0] = self.c[(i, s)]
 
         iteration = -1
-        while len(self.i) > 0 and iteration < 10:
+        print(self.i)
+        while len(self.i) > 0 and iteration < 15:
             iteration += 1
             for cell in self.i:
                 if self.__analyseCell(cell):
+                    print(cell)
+                    print(self.g)
                     self.i.remove(cell)
-                    print(self.i)
 
         # for r in range(self.d):
         #     for c in range(self.d):
@@ -58,18 +65,22 @@ class Solver(__Solver):
         return iteration
 
     def __setCell(self, row, col, val):
-        self.g.setCell(row, col, val)
-        self.c[(row, col)].t = val == True
-        self.c[(row, col)].b = val == False
+        if self.g.setCell(row, col, val):
+            self.c[(row, col)].t = val == True
+            self.c[(row, col)].b = val == False
 
     def __analyseCell(self, cell):
         _, trans = zip(*([self.__travel(cell, i) for i in range(4)]))
+        if self.__cell_comp(cell, trans):
+            return True
+
         for i in range(4):
             end = self.__end(cell, i)
             if end:
                 end.t = True
                 if cell.v < sum(trans) - trans[i] + self.__travel(cell, i)[1]:
                     self.__setCell(end.row, end.col, 0)
+                    end.t = False
                 else:
                     end.t = False
 
@@ -79,9 +90,10 @@ class Solver(__Solver):
             if rest > 0:
                 next = cell.n[i]
                 for _ in range(rest):
-                    if next.v == 0:
-                        self.__setCell(next.row, next.col, 1)
-                    next = next.n[i]
+                    if next:
+                        if next.v == 0:
+                            self.__setCell(next.row, next.col, 1)
+                        next = next.n[i]
 
         if cell.v == sum(spaces):
             for i, n in enumerate(spaces):
@@ -106,12 +118,9 @@ class Solver(__Solver):
                 self.__setCell(next.row, next.col, 0)
             return True
 
-        if cell.v == sum(trans):
-            for i in range(4):
-                blk = self.__end(cell, i)
-                if blk is not None:
-                    self.__setCell(blk.row, blk.col, 0)
+        if self.__cell_comp(cell, trans):
             return True
+
         return False
 
     def __travel(self, c, d, s=-1, t=-1, n=True):
@@ -130,3 +139,12 @@ class Solver(__Solver):
         if not c.v and not c.t:
             return c
         return self.__end(c.n[d], d)
+
+    def __cell_comp(self, c, t):
+        if c.v == sum(t):
+            for i in range(4):
+                blk = self.__end(c, i)
+                if blk is not None:
+                    self.__setCell(blk.row, blk.col, 0)
+            return True
+        return False
