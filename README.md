@@ -38,7 +38,7 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 ### <a href="docs/Kuromasu.md/">Kuromasu</a>
 
--   Status: 📒 Backlog
+-   Status: ✅ Complete
 -   Web Game: 📒 Backlog
 
 ### <a href="docs/Mastermind.md/">Mastermind</a>
