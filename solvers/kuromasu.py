@@ -63,7 +63,25 @@ class Solver(__Solver):
         self.c[(row, col)].b = val == False
 
     def __analyseCell(self, cell):
+        _, trans = zip(*([self.__travel(cell, i) for i in range(4)]))
+        for i in range(4):
+            end = self.__end(cell, i)
+            if end:
+                end.t = True
+                if cell.v < sum(trans) - trans[i] + self.__travel(cell, i)[1]:
+                    self.__setCell(end.row, end.col, 0)
+                else:
+                    end.t = False
+
         spaces, trans = zip(*([self.__travel(cell, i) for i in range(4)]))
+        for i in range(4):
+            rest = cell.v - sum(n for j, n in enumerate(spaces) if i != j)
+            if rest > 0:
+                next = cell.n[i]
+                for _ in range(rest):
+                    if next.v == 0:
+                        self.__setCell(next.row, next.col, 1)
+                    next = next.n[i]
 
         if cell.v == sum(spaces):
             for i, n in enumerate(spaces):
@@ -76,11 +94,9 @@ class Solver(__Solver):
                     self.__setCell(next.row, next.col, 0)
             return True
 
-        index, single = 0, -1
         offset = [s - t for s, t in zip(spaces, trans)]
-        for i, n in enumerate(offset):
-            if n == sum(offset):
-                index, single = i, n
+        single = max(offset) if max(offset) == sum(offset) else -1
+        index = offset.index(single) if single != -1 else 0
         if single != -1:
             next = cell.n[index]
             for _ in range(cell.v - sum(trans)):
