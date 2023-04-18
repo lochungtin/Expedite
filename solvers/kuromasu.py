@@ -10,27 +10,11 @@ class Cell:
         self.b = block
         self.n = [None, None, None, None]
 
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return "({}, {}) [v{} t{} b{}] [{}]".format(
-            self.row,
-            self.col,
-            self.v,
-            self.t * 1,
-            self.b * 1,
-            " ".join(str((n != None and not n.b) * 1) for n in self.n),
-        )
-
 
 class Solver(__Solver):
-    def __init__(self, game) -> None:
-        super().__init__(game)
+    def run(self):
         self.i = []
         self.c = {}
-
-    def run(self):
         for r, row in enumerate(self.b):
             for c, cell in enumerate(row):
                 if cell == "x":
@@ -66,23 +50,18 @@ class Solver(__Solver):
 
     def __setCell(self, row, col, val):
         if self.g.setCell(row, col, val):
-            self.c[(row, col)].t = val == True
-            self.c[(row, col)].b = val == False
+            self.c[(row, col)].t = val == 1
+            self.c[(row, col)].b = val == 0
 
     def __analyseCell(self, cell):
         _, trans = zip(*([self.__travel(cell, i) for i in range(4)]))
-        if self.__cell_comp(cell, trans):
-            return True
-
         for i in range(4):
             end = self.__end(cell, i)
             if end:
                 end.t = True
                 if cell.v < sum(trans) - trans[i] + self.__travel(cell, i)[1]:
                     self.__setCell(end.row, end.col, 0)
-                    end.t = False
-                else:
-                    end.t = False
+                end.t = False
 
         spaces, trans = zip(*([self.__travel(cell, i) for i in range(4)]))
         for i in range(4):
@@ -118,7 +97,11 @@ class Solver(__Solver):
                 self.__setCell(next.row, next.col, 0)
             return True
 
-        if self.__cell_comp(cell, trans):
+        if cell.v == sum(trans):
+            for i in range(4):
+                blk = self.__end(cell, i)
+                if blk is not None:
+                    self.__setCell(blk.row, blk.col, 0)
             return True
 
         return False
@@ -139,12 +122,3 @@ class Solver(__Solver):
         if not c.v and not c.t:
             return c
         return self.__end(c.n[d], d)
-
-    def __cell_comp(self, c, t):
-        if c.v == sum(t):
-            for i in range(4):
-                blk = self.__end(c, i)
-                if blk is not None:
-                    self.__setCell(blk.row, blk.col, 0)
-            return True
-        return False
