@@ -17,7 +17,7 @@ def execute(gamemode, config):
     i = s.run()
 
     print(g)
-    print("Solved in {} iterations.".format(i))
+    print(f"Solved in {i} iterations.")
 
 
 if __name__ == "__main__":
