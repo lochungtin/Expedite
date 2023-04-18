@@ -115,9 +115,7 @@ class Solver(__Solver):
         return s, t
 
     def __end(self, c, d):
-        if c is None:
-            return None
-        if c.b:
+        if c is None or c.b:
             return None
         if not c.v and not c.t:
             return c
