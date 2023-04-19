@@ -19,3 +19,33 @@ If the player expands on a mine, the game is considered a fail. To prevent the f
 Flagging is the action to mark a cell as a mine. Flagging will not reveal if the cell is or is not a mine. The objective of the game is to flag all the cells that have mines correctly.
 
 ## Algorithm
+
+### Algorithm Structure
+
+Highly abstracted algorithm pseudo-code
+
+```cpp
+bool hasBoardUpdated;
+while (game.isFinished()) {
+    hasBoardUpdated = false;
+    for (auto cell : cells) {
+        if (cell.notExpanded()) {
+            if (mustBeMine(cell)) {
+                game.flag(cell)
+                hasBoardUpdated = true;
+            }
+            if (mustNotBeMine(cell)) {
+                game.expand(cell)
+                hasBoardUpdated = true;
+            }
+        }
+    }
+    if (!hasBoardUpdated) {
+        isMine = game.expandRandomCell();
+        while (isMine) {
+            game.revert();
+            isMine = game.expandRandomCell();
+        }
+    }
+}
+```

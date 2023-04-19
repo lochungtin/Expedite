@@ -56,12 +56,17 @@ Highly abstracted algorithm pseudo-code
 bool hasBoardUpdated = true;
 while (hasBoardUpdated) {
 	hasBoardUpdated = false;
-
-	if (enforcedRule1())
+	if (sectionHasPattern1(board)) {
+        enforceRule1(board);
 		hasBoardUpdated = true;
-	if (enforcedRule2())
+    }
+    if (sectionHasPattern2(board)) {
+        enforceRule2(board);
 		hasBoardUpdated = true;
-	if (enforcedRule3())
+    }
+    if (sectionHasPattern3(board)) {
+        enforceRule3(board);
 		hasBoardUpdated = true;
+    }
 }
 ```
