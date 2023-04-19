@@ -42,3 +42,8 @@ This list will be expanded upon and updated as status for sub-projects change an
 | <a href="docs/Tazuku.md/">Tazuku</a>            | ✅ Complete                                                            | 📒 Backlog      |
 
 </div>
+
+## Planned Features
+
+1. OpenCV computer vision for game integration
+    - Ability to interact with applications and solve puzzles from apps autonomously
