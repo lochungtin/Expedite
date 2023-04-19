@@ -26,52 +26,19 @@ The following list shows the puzzle games for this project and their respective 
 
 This list will be expanded upon and updated as status for sub-projects change and / or new puzzles are being added to the catalogue.
 
-### <a href="docs/2048.md/">2048</a>
+<div align="center">
 
--   Status: 📒 Backlog
--   Web Game: 📒 Backlog
+| Game                                            | Algorithm Status                                                       | Web Game Status |
+| :---------------------------------------------- | :--------------------------------------------------------------------- | :-------------- |
+| <a href="docs/2048.md/">2048</a>                | 📒 Backlog                                                             | 📒 Backlog      |
+| <a href="docs/Kuromasu.md/">Kuromasu</a>        | ✅ Complete                                                            | 📒 Backlog      |
+| <a href="docs/Mastermind.md/">Mastermind</a>    | 🛑 Paused                                                              | ✅ Complete     |
+| <a href="docs/MineSweeper.md/">Mine Sweeper</a> | ✅ Complete                                                            | ✅ Complete     |
+| <a href="docs/Nonogram.md/">Nonogram</a>        | 🛠️ Work in Progress                                                    | 📒 Backlog      |
+| <a href="docs/Numberlink.md/">Numberlink</a>    | 📒 Backlog                                                             | 📒 Backlog      |
+| <a href="docs/Slitherlink.md/">Slitherlink</a>  | 📒 Backlog                                                             | 📒 Backlog      |
+| <a href="docs/Snake.md/">Snake</a>              | ✅ <a href="https://github.com/lochungtin/snakeAI">Partly Complete</a> | ✅ Complete     |
+| <a href="docs/Sudoku.md/">Sudoku</a>            | ✅ Complete                                                            | ✅ Complete     |
+| <a href="docs/Tazuku.md/">Tazuku</a>            | ✅ Complete                                                            | 📒 Backlog      |
 
-### <a href="docs/Kuromasu.md/">Kuromasu</a>
-
--   Status: ✅ Complete
--   Web Game: 📒 Backlog
-
-### <a href="docs/Mastermind.md/">Mastermind</a>
-
--   Status: 🛑 Paused
--   Web Game: ✅ Complete
-
-### <a href="docs/MineSweeper.md/">Mine Sweeper</a>
-
--   Status: ✅ Complete
--   Web Game: ✅ Complete
-
-### <a href="docs/Nonogram.md/">Nonogram</a>
-
--   Status: 🛠️ Work in Progress
--   Web Game: 📒 Backlog
-
-### <a href="docs/Numberlink.md/">Numberlink</a>
-
--   Status: 📒 Backlog
--   Web Game: 📒 Backlog
-
-### <a href="docs/Slitherlink.md/">Slitherlink</a>
-
--   Status: 📒 Backlog
--   Web Game: 📒 Backlog
-
-### <a href="docs/Snake.md/">Snake</a>
-
--   Status: ✅ Partial Completion | <a href="https://github.com/lochungtin/snakeAI">Reinforcement AI Complete</a>
--   Web Game: 📒 Backlog
-
-### <a href="docs/Sudoku.md/">Sudoku</a>
-
--   Status: ✅ Complete
--   Web Game: ✅ Complete
-
-### <a href="docs/Tazuku.md/">Tazuku</a>
-
--   Status: ✅ Complete
--   Web Game: 📒 Backlog
+</div>
