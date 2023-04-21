@@ -20,9 +20,29 @@ Flagging is the action to mark a cell as a mine. Flagging will not reveal if the
 
 ## Algorithm
 
-The intuition of the algorithm is to iteratively loop over each _unflagged_ or _unexpanded_ cell and determine whether or not the cell must or must not be a mine. By counting the number of expanded cells and mines around numbered cells, it is possible to determine whether or not a cell is or is not a mine.
+The intuition of the algorithm is to iteratively loop over each numbered cell and determine whether or not the neighbouring cells must or must not be a mine. By counting the number of expanded cells and mines around numbered cell, it is possible to determine whether or not a neighbouring cell is or is not a mine.
 
-$$\max{a}$$
+### Logic
+
+Let $v_c$ be the number of mines around the cell $c$
+
+Let $E_c$ be the set of expanded neighbours of cell $c$
+
+Let $M_c$ be the set of neighbouring cells of cell $c$ that are / marked as mines
+
+Let $U_c$ be the set of unexpanded neighbours of cell $c$
+
+-   $|E_c| + |U_c| = 8$
+
+**All $U_c$ of cell $c$ must be a mine**
+
+-   Condition
+    -   $|U_c| = v_c - |M_c|$
+
+**All $U_c$ cell $c$ must not be a mine**
+
+-   Condition
+    -   $|M_c| = v_c$
 
 ### Algorithm Structure
 
