@@ -12,18 +12,18 @@ def printHelp():
     for name in listdir(Path("configs")):
         print(f"\t{name}")
     print("\n-c --config <config> [REQUIRED]")
-    print(
-        '\tCheck the directory "./configs/<gamemode>/" for all config files available.'
-    )
+    print('\tCheck the directory "./configs/<gamemode>/" for all config files available.')
 
 
 def execute(gamemode, config):
     game = import_module(f"games.{gamemode}")
     solver = import_module(f"solvers.{gamemode}")
 
-    path = Path(f"./configs/{gamemode}/config_{config}.txt")
-    with open(path, "r") as f:
-        lines = f.readlines()
+    lines = None
+    if gamemode != "2048":
+        path = Path(f"./configs/{gamemode}/config_{config}.txt")
+        with open(path, "r") as f:
+            lines = f.readlines()
 
     g = game.Game(lines)
     print(g)
@@ -64,15 +64,15 @@ if __name__ == "__main__":
         print(f'ERROR! Game "{gamemode}" not found.')
         sys.exit(2)
 
-    if gamemode not in listdir(Path("configs")):
+    if gamemode != "2048" and gamemode not in listdir(Path("configs")):
         print(f'ERROR! Config file "config_{config}.txt" not found.')
         sys.exit(2)
 
-    if f"config_{config}.txt" not in listdir(Path(f"configs/{gamemode}")):
+    if gamemode != "2048" and f"config_{config}.txt" not in listdir(Path(f"configs/{gamemode}")):
         print(f'ERROR! Config file "config_{config}.txt" not found.')
         sys.exit(2)
 
-    if gamemode is None or config is None:
+    if gamemode is None or (gamemode != "2048" and config is None):
         printHelp()
         sys.exit(2)
 
