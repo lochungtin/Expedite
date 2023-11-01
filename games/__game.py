@@ -8,6 +8,6 @@ class __Game:
         return self.__repr__()
 
     def __repr__(self):
-        row = "+" + "".join("---+" for _ in range(len(self.board))) + "\n"
+        row = "+" + "".join("---+" for _ in range(len(self.board[0]))) + "\n"
         rt = [row + "|" + "".join(" {} |".format(self._m.get(c, c) if self._d else c) for c in l) for l in self.board]
         return "\n".join(rt + [row[0 : len(row) - 1]])
