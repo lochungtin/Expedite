@@ -13,6 +13,9 @@ class Solver(__Solver):
         s = set(self.l + [self.m])
         l1 = list(filter(lambda x: all(map(lambda y: y in s, x)) and self.m in x, self.c))
         l1.sort(key=len, reverse=True)
-        self.g.board = l1
+        if len(l1) > 20:
+            print("\n".join(l1[0:20] + ["...", l1[-1]]))
+        else:
+            print("\n".join(l1))
         return len(l1)
             
