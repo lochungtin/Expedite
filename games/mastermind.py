@@ -2,7 +2,7 @@ from games.__game import __Game
 
 
 class Game(__Game):
-    def __init__(self, lines) -> None:
+    def __init__(self, lines):
         super().__init__()
         self.answer = list(map(int, lines[0].strip().split(" ")))
         self.aFreq = [self.answer.count(i) for i in range(6)]
