@@ -4,7 +4,7 @@ from solvers.__solver import __Solver
 
 
 class Solver(__Solver):
-    def __init__(self, game) -> None:
+    def __init__(self, game):
         super().__init__(game)
         self.r = game.row
         self.c = game.col

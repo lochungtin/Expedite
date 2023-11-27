@@ -2,7 +2,7 @@ from solvers.__solver import __Solver
 
 
 class Solver(__Solver):
-    def __init__(self, game) -> None:
+    def __init__(self, game):
         super().__init__(game)
         self.c = [
             [{"0": 0, "1": 0, "-": 0} for _ in range(self.d)],

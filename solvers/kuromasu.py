@@ -12,7 +12,8 @@ class Cell:
 
 
 class Solver(__Solver):
-    def run(self):
+    def run(self, game):
+        super().__init__(game)
         self.i = []
         self.c = {}
         for r, row in enumerate(self.b):
