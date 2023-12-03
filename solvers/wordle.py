@@ -33,8 +33,6 @@ class Solver(__Solver):
                     h += sum(a == b for a, b in zip(w, self.c[j]))
                     m[i][j] = 1 / h
                     m[j][i] = 1 / h
-            print(self.c)
-            print(self.h)
             self.l = sorted([(w, sum(r)) for w, r in zip(self.c, m)], key=lambda x: x[1])[0][0]
         if len(self.c) == 1:
             h = self.g.guess(self.c[0])
