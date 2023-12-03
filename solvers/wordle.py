@@ -17,9 +17,6 @@ class Solver(__Solver):
             h = self.g.guess(self.l)
             if sum(h) == 10:
                 return iterations + 1
-            # print(self.l)
-            # h = input("response: ")
-            h = list(map(int, h))
             for i in range(5):
                 if h[i] == 2:
                     self.h[2][i] = self.l[i]                
@@ -36,7 +33,7 @@ class Solver(__Solver):
             self.l = sorted([(w, sum(r)) for w, r in zip(self.c, m)], key=lambda x: x[1])[0][0]
         if len(self.c) == 1:
             h = self.g.guess(self.c[0])
-            return iterations + 1
+            return iterations + 1 if sum(h) == 10 else -1
         return -1
 
     def __valid(self, w):
