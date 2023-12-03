@@ -42,7 +42,7 @@ This list will be expanded upon and updated as status for sub-projects change an
 | <a href="docs/Snake.md/">Snake</a>                   | ✅ <a href="https://github.com/lochungtin/snakeAI">Partly Complete</a> |
 | <a href="docs/Sudoku.md/">Sudoku</a>                 | ✅ Complete                                                            |
 | <a href="docs/Tazuku.md/">Tazuku</a>                 | ✅ Complete                                                            |
-| <a href="docs/SpellingBee.md">Spelling Bee</a> | ✅ Complete                                                            |
+| <a href="docs/SpellingBee.md">(NYT) Spelling Bee</a> | ✅ Complete                                                            |
 | <a href="docs/Wordle">(NYT) Wordle</a>               | ✅ Complete                                                            |
 | <a href="docs/LetterBoxed">(NYT) Letter Boxed</a>    | 📒 Backlog                                                             |
 
