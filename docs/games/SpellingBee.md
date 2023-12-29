@@ -22,7 +22,7 @@ The solver uses the 30k most frequent word corpus to find all the words that sui
 
 ### Algorithm Structure
 
-```cpp
+```clike
 String[] corpus;
 corpus.filter(criteron);
 corpus.sort(by_length);

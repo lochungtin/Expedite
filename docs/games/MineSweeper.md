@@ -48,7 +48,7 @@ Let $U_c$ be the set of unexpanded neighbours of cell $c$
 
 Highly abstracted algorithm pseudo-code
 
-```cpp
+```clike
 bool hasBoardUpdated;
 while (game.isFinished()) {
     hasBoardUpdated = false;
@@ -75,3 +75,9 @@ while (game.isFinished()) {
 ```
 
 ## Config Setup
+
+The following is an example of the
+
+```
+9 9 9
+```

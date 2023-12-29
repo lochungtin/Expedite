@@ -45,7 +45,7 @@ The set of rules here is not enough to solve all puzzles, so guessing and save s
 
 Highly abstracted algorithm pseudo-code
 
-```cpp
+```clike
 bool possibles[9][9][9] = { true };
 bool gameComplete = false;
 

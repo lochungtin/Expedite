@@ -13,3 +13,5 @@ Run the command `python3 main.py --help` for more information.
 ## Configs <!-- {docsify-ignore} -->
 
 Each game has its separate config file format, please refer to the doc file for each game.
+
+!> **IMPORTANT**: DO NOT leave trailing blank lines in the config txt files.

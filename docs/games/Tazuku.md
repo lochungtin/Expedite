@@ -52,7 +52,7 @@ The intuition of the algorithm is to iteratively loop over the each row and colu
 
 Highly abstracted algorithm pseudo-code
 
-```cpp
+```clike
 bool hasBoardUpdated = true;
 while (hasBoardUpdated) {
 	hasBoardUpdated = false;

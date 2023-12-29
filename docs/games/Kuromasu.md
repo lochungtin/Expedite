@@ -20,7 +20,7 @@ Adjacency is defined as up, down, left, and right. The diagonals are not include
 
 Highly abstracted algorithm pseudo-code
 
-```cpp
+```clike
 Cell[] stack = game.getNonZeroCells();
 while (stack.length > 0) {
     cell = stack.top;
@@ -44,3 +44,16 @@ game.fillEmptyWithBlockers();
 ```
 
 ## Config Setup
+
+The following is an example config.
+
+```
+-2--
+1---
+-24-
+--x2
+```
+
+-   `-` represent blank tiles
+-   `x` represent blocking tiles
+-   Numbers correspond to numbered tiles
