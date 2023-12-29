@@ -10,7 +10,7 @@ Project Expedite is my attempt to create solutions, algorithms, or solvers to cl
 
 3. **Robustness** - The solution should be able to adapt to different "difficulty" levels of the game, whatever that may mean to the game, be it grid size or available options.
 
-## Usage
+## Quick Start
 
 Setup an environment with any python version `> 3.7` and run the command in the root directory.
 
