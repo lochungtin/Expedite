@@ -4,7 +4,7 @@
 
 Kuromasu is a binary-determination logic puzzle played on a square grid. The aim of the game is to fill empty cells with values of either `0` or `1` based on information given from neighbouring cells. A complete game should have all the cells filled in a fashion where all the rules are satisfied.
 
-## Game rules
+## Rules
 
 The concept of a **connection** is that if a cell is adjacent another cell that is not a blocking cell. The connected property is associative, so if cell `A` is connected to `B` and `B` to `C`, then `A`, `B`, and `C` are all connected.
 
@@ -42,3 +42,5 @@ while (stack.length > 0) {
 
 game.fillEmptyWithBlockers();
 ```
+
+## Config Setup

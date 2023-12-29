@@ -13,7 +13,7 @@
 
 ---
 
-🛑 **Under construction**
+🚧 **Under construction**
 
 -   [2048](./games/2048.md)
 -   [Mastermind](./games/Mastermind.md)

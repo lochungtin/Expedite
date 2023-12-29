@@ -4,7 +4,7 @@
 
 Tazuku, also known as binary sudoku is a binary-determination logic puzzle played on a square grid. The aim of the game is to fill empty cells with values of either `0` or `1` based on information given from neighbouring cells. A complete game should have all the cells filled in a fashion where all the rules are satisfied.
 
-## Game Rules
+## Rules
 
 1.  Each row and column has to be made up of the same amount of `0` and `1` cells
 2.  No 2 rows or columns can be the same
@@ -70,3 +70,5 @@ while (hasBoardUpdated) {
     }
 }
 ```
+
+## Config Setup

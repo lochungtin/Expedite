@@ -7,7 +7,7 @@ Spelling Bee is a mini word game designed by the New York Times games. The aim o
 Game representation, the center hexagon houses the mandatory letter, the surrounding hexagons houses the optional letters.
 
 ```
-     ___ 
+     ___
  ___/ h \___
 / l \___/ a \
 \___/ i \___/
@@ -27,3 +27,5 @@ String[] corpus;
 corpus.filter(criteron);
 corpus.sort(by_length);
 ```
+
+## Config Setup

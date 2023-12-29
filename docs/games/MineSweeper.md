@@ -4,7 +4,7 @@
 
 The aim of a game of minesweeper is to find all the mines hidden in the board. To identify a mine, cells that don't have mines will display the number of mines it has neighbouring itself. The game is finished when all the mines are correctly flagged.
 
-## Game Mechanics
+## Rules
 
 There are 2 actions available to the player, **expand** and **flag**.
 
@@ -73,3 +73,5 @@ while (game.isFinished()) {
     }
 }
 ```
+
+## Config Setup

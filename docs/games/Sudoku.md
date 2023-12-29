@@ -6,7 +6,7 @@ The aim of a game of sudoku is to fill the 9x9 grid will numbers from 1 to 9 in 
 
 The game starts with a few seeded numbers and the player will used the seeded numbers to deduce the remaining digits on the grid.
 
-## Game Rules
+## Rules
 
 1. No row, column, or subgrid can have repeating digits
 2. A subgrid is a 3x3 grid, the 9x9 grid is composed of 9 3x3 subgrids.
@@ -67,3 +67,5 @@ while (gameComplete) {
     gameComplete = validateGame();
 }
 ```
+
+## Config Setup
