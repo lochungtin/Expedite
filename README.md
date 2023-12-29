@@ -30,21 +30,21 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 <div align="center">
 
-| Game                                        | Algorithm Status                                            |
-| :------------------------------------------ | :---------------------------------------------------------- |
-| [2048](./docs/2048.md)                      | 📒 Backlog                                                  |
-| [Kuromasu](./docs/Kuromasu.md)              | ✅ Complete                                                 |
-| [Mastermind](./docs/Mastermind.md)          | 🛑 Paused                                                   |
-| [Mine Sweeper](./docs/MineSweeper.md)       | ✅ Complete                                                 |
-| [Nonogram](./docs/Nonogram.md)              | 🛑 Paused                                                   |
-| [Numberlink](./docs/Numberlink.md)          | 📒 Backlog                                                  |
-| [Slitherlink](./docs/Slitherlink.md)        | 📒 Backlog                                                  |
-| [Snake](./docs/Snake.md)                    | ✅ [Partly Complete](https://github.com/lochungtin/snakeAI) |
-| [Sudoku](./docs/Sudoku.md)                  | ✅ Complete                                                 |
-| [Tazuku](./docs/Tazuku.md)                  | ✅ Complete                                                 |
-| [(NYT) SpellingBee](./docs/SpellingBee.md)  | ✅ Complete                                                 |
-| [(NYT) Wordle](./docs/Wordle.md)            | ✅ Complete                                                 |
-| [(NYT) Letter Boxed](./docs/LetterBoxed.md) | 📒 Backlog                                                  |
+| Game                                         | Algorithm Status                                            |
+| :------------------------------------------- | :---------------------------------------------------------- |
+| [2048](./games/2048.md)                      | 📒 Backlog                                                  |
+| [Kuromasu](./games/Kuromasu.md)              | ✅ Complete                                                 |
+| [Mastermind](./games/Mastermind.md)          | 🛑 Paused                                                   |
+| [Mine Sweeper](./games/MineSweeper.md)       | ✅ Complete                                                 |
+| [Nonogram](./games/Nonogram.md)              | 🛑 Paused                                                   |
+| [Numberlink](./games/Numberlink.md)          | 📒 Backlog                                                  |
+| [Slitherlink](./games/Slitherlink.md)        | 📒 Backlog                                                  |
+| [Snake](./games/Snake.md)                    | ✅ [Partly Complete](https://github.com/lochungtin/snakeAI) |
+| [Sudoku](./games/Sudoku.md)                  | ✅ Complete                                                 |
+| [Tazuku](./games/Tazuku.md)                  | ✅ Complete                                                 |
+| [(NYT) SpellingBee](./games/SpellingBee.md)  | ✅ Complete                                                 |
+| [(NYT) Wordle](./games/Wordle.md)            | ✅ Complete                                                 |
+| [(NYT) Letter Boxed](./games/LetterBoxed.md) | 📒 Backlog                                                  |
 
 </div>
 
