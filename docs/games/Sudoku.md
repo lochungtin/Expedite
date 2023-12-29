@@ -69,3 +69,20 @@ while (gameComplete) {
 ```
 
 ## Config Setup
+
+The following is an example config file.
+
+```
+1-----2--
+7-4-6----
+--9-8--3-
+---1-6-8-
+-12---4--
+---7---5-
+-4------3
+5---729--
+----98---
+```
+
+-   `-` represent blank tiles
+-   Numbers correspond to originally numbered tiles

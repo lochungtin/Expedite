@@ -72,3 +72,18 @@ while (hasBoardUpdated) {
 ```
 
 ## Config Setup
+
+The following is an example config file.
+
+```
+--1---
+------
+0--01-
+---0--
+----1-
+00-1--
+```
+
+-   `-` represent blank tiles
+-   Numbers correspond to originally numbered tiles
+    -   `0` and `1` are interchangable, but must be consistent throughout

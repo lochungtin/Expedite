@@ -45,15 +45,17 @@ game.fillEmptyWithBlockers();
 
 ## Config Setup
 
-The following is an example config.
+The following is an example config file.
 
 ```
--2--
-1---
--24-
---x2
+--6---
+-2-x32
+-----2
+3-----
+-4---2
+--2--2
 ```
 
 -   `-` represent blank tiles
 -   `x` represent blocking tiles
--   Numbers correspond to numbered tiles
+-   Numbers correspond to originally numbered tiles

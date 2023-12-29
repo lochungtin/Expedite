@@ -29,3 +29,15 @@ corpus.sort(by_length);
 ```
 
 ## Config Setup
+
+The following is an example config file.
+
+```
+b
+a g i v n r
+```
+
+-   The first line must only have one letter
+    -   The letter `b` in this example represents the letter that **must** appear
+-   The second line contains all the letters that **can** appear
+    -   Order is not important

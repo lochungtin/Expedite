@@ -76,8 +76,12 @@ while (game.isFinished()) {
 
 ## Config Setup
 
-The following is an example of the
+The following is an example config file.
 
 ```
-9 9 9
+9 10 8
 ```
+
+-   The first number `9` represents the number of rows in the board
+-   The second number `10` represents the number of columns in the board
+-   The last number `8` represents the number of mines in the board
