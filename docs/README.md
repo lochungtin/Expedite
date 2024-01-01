@@ -1,4 +1,4 @@
-# Project Expedite
+# Project Expedite [(Github)](https://github.com/lochungtin/Expedite)
 
 Project Expedite is my attempt to create solutions, algorithms, or solvers to classic puzzle games. There are a few principles I abide by when creating these algorithms.
 
