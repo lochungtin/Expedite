@@ -51,34 +51,32 @@ def next():
     mouse.click(Button.left)
 
 
-sleep(1)
 next()
 
-for i in range(4, 41):
-    sleep(0.1)
+with mss() as sct:
+    for i in range(4, 41):
+        sleep(0.1)
 
-    data = None
-    with mss() as sct:
         img = np.array(sct.grab(BASE_CONFIG))
         gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
         gray = ~gray
         _, thres = cv.threshold(gray, 100, 255, cv.THRESH_BINARY_INV)
         data = np.array(thres)
 
-    cells = {}
-    for y in range(5):
-        for x in range(8):
-            xPad = CELL_BRD + (CELL_SHIFT * x)
-            yPad = CELL_BRD + (CELL_SHIFT * y)
-            crop = data[yPad : yPad + CELL_DIM, xPad : xPad + CELL_DIM]
-            if crop.astype(bool).any():
-                cells[arr2num(crop)] = (x, y)
+        cells = {}
+        for y in range(5):
+            for x in range(8):
+                xPad = CELL_BRD + (CELL_SHIFT * x)
+                yPad = CELL_BRD + (CELL_SHIFT * y)
+                crop = data[yPad : yPad + CELL_DIM, xPad : xPad + CELL_DIM]
+                if crop.astype(bool).any():
+                    cells[arr2num(crop)] = (x, y)
 
-    for i in range(1, len(cells) + 1):
-        x, y = cells[i]
-        x = CLICK_XPAD + (CELL_SHIFT * x)
-        y = CLICK_YPAD + (CELL_SHIFT * y)
-        mouse.position = (x, y)
-        mouse.click(Button.left)
+        for i in range(1, len(cells) + 1):
+            x, y = cells[i]
+            x = CLICK_XPAD + (CELL_SHIFT * x)
+            y = CLICK_YPAD + (CELL_SHIFT * y)
+            mouse.position = (x, y)
+            mouse.click(Button.left)
 
-    next()
+        next()
