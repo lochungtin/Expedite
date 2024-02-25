@@ -30,21 +30,26 @@ This list will be expanded upon and updated as status for sub-projects change an
 
 <div align="center">
 
-| Game                                         | Algorithm Status                                            |
-| :------------------------------------------- | :---------------------------------------------------------- |
-| [2048](./games/2048.md)                      | 📒 Backlog                                                  |
-| [Kuromasu](./games/Kuromasu.md)              | ✅ Complete                                                 |
-| [Mastermind](./games/Mastermind.md)          | 🛑 Paused                                                   |
-| [Mine Sweeper](./games/MineSweeper.md)       | ✅ Complete                                                 |
-| [Nonogram](./games/Nonogram.md)              | 🛑 Paused                                                   |
-| [Numberlink](./games/Numberlink.md)          | 📒 Backlog                                                  |
-| [Slitherlink](./games/Slitherlink.md)        | 📒 Backlog                                                  |
-| [Snake](./games/Snake.md)                    | ✅ [Partly Complete](https://github.com/lochungtin/snakeAI) |
-| [Sudoku](./games/Sudoku.md)                  | ✅ Complete                                                 |
-| [Tazuku](./games/Tazuku.md)                  | ✅ Complete                                                 |
-| [(NYT) SpellingBee](./games/SpellingBee.md)  | ✅ Complete                                                 |
-| [(NYT) Wordle](./games/Wordle.md)            | ✅ Complete                                                 |
-| [(NYT) Letter Boxed](./games/LetterBoxed.md) | 📒 Backlog                                                  |
+| Game                                                        | Algorithm Status                                            |
+| :---------------------------------------------------------- | :---------------------------------------------------------- |
+| [2048](./docs/games/2048.md)                                | 📒 Backlog                                                  |
+| [Kuromasu](./docs/games/Kuromasu.md)                        | ✅ Complete                                                 |
+| [Mastermind](./docs/games/Mastermind.md)                    | 🛑 Paused                                                   |
+| [Mine Sweeper](./docs/games/MineSweeper.md)                 | ✅ Complete                                                 |
+| [Nonogram](./docs/games/Nonogram.md)                        | 🛑 Paused                                                   |
+| [Numberlink](./docs/games/Numberlink.md)                    | 📒 Backlog                                                  |
+| [Slitherlink](./docs/games/Slitherlink.md)                  | 📒 Backlog                                                  |
+| [Snake](./docs/games/Snake.md)                              | ✅ [Partly Complete](https://github.com/lochungtin/snakeAI) |
+| [Sudoku](./docs/games/Sudoku.md)                            | ✅ Complete                                                 |
+| [Tazuku](./docs/games/Tazuku.md)                            | ✅ Complete                                                 |
+| [(NYT) SpellingBee](./docs/games/NYT/SpellingBee.md)        | ✅ Complete                                                 |
+| [(NYT) Wordle](./docs/games/NYT/Wordle.md)                  | ✅ Complete                                                 |
+| [(NYT) Letter Boxed](./docs/games/NYT/LetterBoxed.md)       | 📒 Backlog                                                  |
+| [(HBM) Chimp Test](./docs/games/HBM/ChimpTest.md)           | ✅ Complete                                                 |
+| [(HBM) Aim Trainer](./docs/games/HBM/AimTrainer.md)         | ✅ Complete                                                 |
+| [(HBM) Reaction Time](./docs/games/HBM/ReactionTime.md)     | ✅ Complete                                                 |
+| [(HBM) Visual Memory](./docs/games/HBM/VisualMemory.md)     | 📒 Backlog                                                  |
+| [(HBM) Sequence Memory](./docs/games/HBM/SequenceMemory.md) | 📒 Backlog                                                  |
 
 </div>
 
